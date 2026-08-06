@@ -14,5 +14,14 @@ Documenttitle=测试
 Briefintroductionofdocuments=这是一个测试文章
 IsthereaGiteeshunt=false
 URLtoGitee=false
-URLtoGithub=
-Whethertosetthetop=true
+URLtoGithub=https://github.com/ThinkReally114/website/blob/816ca49a94b3bcfd88c8dff59697e6f7f09ec281/does/blog/test.md
+Whethertosetthetop=false
+
+Documentreleaseorupdatetime=20260806
+Samedayupdatesequence=2
+Documenttitle=测试2
+Briefintroductionofdocuments=这是一个测试文章
+IsthereaGiteeshunt=false
+URLtoGitee=false
+URLtoGithub=https://github.com/ThinkReally114/website/blob/816ca49a94b3bcfd88c8dff59697e6f7f09ec281/does/blog/test2.md
+Whethertosetthetop=false
