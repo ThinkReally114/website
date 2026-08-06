@@ -116,6 +116,8 @@ section { padding: 5rem 0; scroll-margin-top: 4rem; }
 .hero h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 3rem; letter-spacing: -0.025em; line-height: 1.02; color: var(--md-on-surface); margin-bottom: 1.75rem; }
 @media (min-width: 640px) { .hero h1 { font-size: 4.5rem; } }
 .hero h1 .accent { color: var(--md-primary); }
+.typewriter { border-right: 3px solid var(--md-primary); animation: blink 750ms step-end infinite; }
+@keyframes blink { 50% { border-color: transparent; } }
 .hero-tagline { max-width: 42rem; font-size: 1.125rem; line-height: 1.625; color: var(--md-on-surface-variant); margin-bottom: 2.5rem; }
 @media (min-width: 640px) { .hero-tagline { font-size: 1.25rem; } }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 4rem; }
@@ -225,8 +227,6 @@ section { padding: 5rem 0; scroll-margin-top: 4rem; }
 .footer-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 1rem; }
 @media (min-width: 640px) { .footer-inner { flex-direction: row; padding: 0 2rem; } }
 .footer-copy { font-size: 0.875rem; color: var(--md-on-surface-variant); }
-.footer-built { font-size: 0.75rem; color: var(--md-outline); font-family: "JetBrains Mono", monospace; display: flex; align-items: center; gap: 0.375rem; }
-.footer-built .dot { width: 0.375rem; height: 0.375rem; border-radius: 9999px; background: var(--md-primary); }
 
 /* ---------- Misc ---------- */
 ::selection { background: var(--md-primary-container); color: var(--md-on-primary-container); }
@@ -302,7 +302,6 @@ section { padding: 5rem 0; scroll-margin-top: 4rem; }
 <footer class="footer">
   <div class="footer-inner">
     <p class="footer-copy" id="footer-copy"></p>
-    <p class="footer-built" id="footer-built"></p>
   </div>
 </footer>
 
@@ -409,6 +408,56 @@ var ICONS = {
   location: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>'
 };
 
+var _twTimer = null;
+function startTypewriter(t) {
+  if (_twTimer) { clearTimeout(_twTimer); _twTimer = null; }
+  var nameEl = document.getElementById("tw-name");
+  var cursorEl = document.getElementById("tw-cursor");
+  var taglineEl = document.getElementById("hero-tagline");
+  var ctaEl = document.getElementById("hero-cta");
+  var statsEl = document.getElementById("hero-stats");
+  var name = t.hero.name;
+  var tagline = t.hero.tagline;
+  var phase = 0, i = 0;
+
+  function step() {
+    if (phase === 0) {
+      if (i <= name.length) {
+        nameEl.textContent = name.substring(0, i);
+        i++;
+        _twTimer = setTimeout(step, 90);
+      } else {
+        cursorEl.style.display = "";
+        nameEl.classList.remove("typewriter");
+        phase = 1; i = 0;
+        _twTimer = setTimeout(step, 300);
+      }
+    } else if (phase === 1) {
+      if (i <= tagline.length) {
+        taglineEl.textContent = tagline.substring(0, i);
+        taglineEl.classList.add("typewriter");
+        i++;
+        _twTimer = setTimeout(step, 25);
+      } else {
+        taglineEl.classList.remove("typewriter");
+        phase = 2;
+        _twTimer = setTimeout(step, 200);
+      }
+    } else {
+      ctaEl.innerHTML =
+        '<a href="#work" class="btn-primary">' + t.hero.ctaWork + " " + ICONS.arrow + "</a>" +
+        '<a href="' + GITHUB_URL + '" target="_blank" rel="noopener noreferrer" class="btn-secondary">' + ICONS.githubSm + " " + t.hero.ctaGithub + "</a>";
+      var statsHtml = "";
+      t.hero.stats.forEach(function(s) {
+        statsHtml += '<div><dt class="hero-stat-num">' + s.num + '</dt><dd class="hero-stat-label">' + s.label + "</dd></div>";
+      });
+      statsEl.innerHTML = statsHtml;
+      _twTimer = null;
+    }
+  }
+  step();
+}
+
 function render() {
   var t = dict[lang];
 
@@ -426,16 +475,11 @@ function render() {
 
   // Hero
   document.getElementById("hero-badge").innerHTML = '<span class="dot"></span>' + t.hero.eyebrow;
-  document.getElementById("hero-name").innerHTML = t.hero.name + '<span class="accent">.</span>';
-  document.getElementById("hero-tagline").textContent = t.hero.tagline;
-  document.getElementById("hero-cta").innerHTML =
-    '<a href="#work" class="btn-primary">' + t.hero.ctaWork + " " + ICONS.arrow + "</a>" +
-    '<a href="' + GITHUB_URL + '" target="_blank" rel="noopener noreferrer" class="btn-secondary">' + ICONS.githubSm + " " + t.hero.ctaGithub + "</a>";
-  var statsHtml = "";
-  t.hero.stats.forEach(function(s) {
-    statsHtml += '<div><dt class="hero-stat-num">' + s.num + '</dt><dd class="hero-stat-label">' + s.label + "</dd></div>";
-  });
-  document.getElementById("hero-stats").innerHTML = statsHtml;
+  document.getElementById("hero-name").innerHTML = '<span class="typewriter" id="tw-name"></span><span class="accent" id="tw-cursor" style="display:none">.</span>';
+  document.getElementById("hero-tagline").textContent = "";
+  document.getElementById("hero-cta").innerHTML = "";
+  document.getElementById("hero-stats").innerHTML = "";
+  startTypewriter(t);
 
   // Work header
   document.getElementById("work-header").innerHTML =
@@ -524,7 +568,6 @@ function render() {
 
   // Footer
   document.getElementById("footer-copy").innerHTML = "© " + new Date().getFullYear() + " " + t.hero.name + ". " + t.footer.rights + ".";
-  document.getElementById("footer-built").innerHTML = '<span class="dot"></span> ' + t.footer.built;
 
   // Theme button
   document.getElementById("theme-btn").innerHTML = dark ? ICONS.sun : ICONS.moon;
