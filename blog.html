@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThinkReally114 — Blog</title>
+<meta name="description" content="ThinkReally114 的技术博客 — Minecraft 模组开发、Web UI 设计与跨平台工具。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --md-primary: #00696C;
+  --md-on-primary: #FFFFFF;
+  --md-primary-container: #6FF6FB;
+  --md-on-primary-container: #002021;
+  --md-secondary: #4A6363;
+  --md-secondary-container: #CCE8E7;
+  --md-on-secondary-container: #051F1F;
+  --md-tertiary: #4C5F7C;
+  --md-tertiary-container: #D4E3FF;
+  --md-on-tertiary-container: #041C35;
+  --md-surface: #F4FBFA;
+  --md-on-surface: #161D1D;
+  --md-surface-variant: #DAE5E3;
+  --md-on-surface-variant: #3F4948;
+  --md-surface-container-lowest: #FFFFFF;
+  --md-surface-container-low: #EFF5F4;
+  --md-surface-container: #E9EFEE;
+  --md-surface-container-high: #E3E9E8;
+  --md-surface-container-highest: #DDE4E2;
+  --md-outline: #6F7979;
+  --md-outline-variant: #BEC9C7;
+  --md-background: #F4FBFA;
+  --md-on-background: #161D1D;
+  color-scheme: light;
+}
+.dark {
+  --md-primary: #4CDADF;
+  --md-on-primary: #003739;
+  --md-primary-container: #004F52;
+  --md-on-primary-container: #6FF6FB;
+  --md-secondary: #B1CCCB;
+  --md-secondary-container: #324B4B;
+  --md-on-secondary-container: #CCE8E7;
+  --md-tertiary: #B3C8E8;
+  --md-tertiary-container: #334863;
+  --md-on-tertiary-container: #D4E3FF;
+  --md-surface: #0E1514;
+  --md-on-surface: #DDE4E3;
+  --md-surface-variant: #3F4948;
+  --md-on-surface-variant: #BEC9C7;
+  --md-surface-container-lowest: #090F0F;
+  --md-surface-container-low: #161E1D;
+  --md-surface-container: #1B2322;
+  --md-surface-container-high: #252D2C;
+  --md-surface-container-highest: #303837;
+  --md-outline: #899392;
+  --md-outline-variant: #3F4948;
+  --md-background: #0E1514;
+  --md-on-background: #DDE4E3;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--md-background);
+  color: var(--md-on-background);
+  font-family: "Instrument Sans", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-kerning: normal;
+  line-height: 1.5;
+  transition: background 400ms cubic-bezier(0.2,0,0,1), color 400ms cubic-bezier(0.2,0,0,1);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 10% 0%, color-mix(in srgb, var(--md-primary) 12%, transparent) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 30%, color-mix(in srgb, var(--md-tertiary) 10%, transparent) 0%, transparent 55%),
+    linear-gradient(180deg, var(--md-background) 0%, var(--md-surface-container-low) 40%, var(--md-background) 100%);
+  background-attachment: fixed;
+}
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+
+.container { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
+.container-narrow { max-width: 48rem; margin: 0 auto; padding: 0 1.25rem; }
+section { padding: 5rem 0; scroll-margin-top: 4rem; }
+@media (min-width: 640px) { section { padding: 7rem 0; } .container, .container-narrow { padding: 0 2rem; } }
+
+.navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 50; transition: all 300ms cubic-bezier(0.2,0,0,1); }
+.navbar.scrolled { background: var(--md-surface-container-low); box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 1px 3px 1px rgba(0,0,0,0.15); }
+.dark .navbar.scrolled { box-shadow: none; border-bottom: 1px solid var(--md-outline-variant); }
+.navbar-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; height: 4rem; display: flex; align-items: center; justify-content: space-between; }
+@media (min-width: 640px) { .navbar-inner { padding: 0 2rem; } }
+.navbar-logo { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.125rem; letter-spacing: -0.025em; color: var(--md-on-surface); }
+.navbar-logo .accent { color: var(--md-primary); }
+.navbar-links { display: none; align-items: center; gap: 0.25rem; }
+@media (min-width: 768px) { .navbar-links { display: flex; } }
+.navbar-links a { padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; color: var(--md-on-surface-variant); transition: color 150ms; }
+.navbar-links a:hover { color: var(--md-on-surface); background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
+.navbar-actions { display: flex; align-items: center; gap: 0.5rem; }
+.btn-icon { width: 2.5rem; height: 2.5rem; border: none; border-radius: 9999px; background: transparent; color: var(--md-on-surface-variant); display: grid; place-items: center; cursor: pointer; transition: color 150ms, background 150ms; }
+.btn-icon:hover { color: var(--md-on-surface); background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
+.btn-lang { height: 2.5rem; padding: 0 1rem; border: none; border-radius: 9999px; background: var(--md-secondary-container); color: var(--md-on-secondary-container); font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.375rem; cursor: pointer; transition: filter 150ms; }
+.btn-lang:hover { filter: brightness(0.96); }
+.btn-github { width: 2.5rem; height: 2.5rem; border: none; border-radius: 9999px; background: var(--md-primary); color: var(--md-on-primary); display: grid; place-items: center; cursor: pointer; transition: filter 150ms; }
+.btn-github:hover { filter: brightness(1.1); }
+
+.blog-hero { padding-top: 8rem; padding-bottom: 3rem; }
+@media (min-width: 640px) { .blog-hero { padding-top: 10rem; padding-bottom: 4rem; } }
+.blog-hero .index { font-family: "JetBrains Mono", monospace; font-size: 0.875rem; color: var(--md-primary); font-weight: 500; }
+.blog-hero .line { display: inline-block; height: 1px; width: 3rem; background: var(--md-outline-variant); vertical-align: middle; margin-left: 1rem; }
+.blog-hero h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 2.25rem; letter-spacing: -0.025em; color: var(--md-on-surface); margin: 1rem 0; }
+@media (min-width: 640px) { .blog-hero h1 { font-size: 3.5rem; } }
+.blog-hero p { max-width: 42rem; font-size: 1.125rem; line-height: 1.625; color: var(--md-on-surface-variant); }
+@media (min-width: 640px) { .blog-hero p { font-size: 1.25rem; } }
+
+.post-list { display: flex; flex-direction: column; gap: 1.5rem; }
+@media (min-width: 640px) { .post-list { gap: 2rem; } }
+.post-card { display: block; background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); border-radius: 24px; padding: 2rem; transition: box-shadow 300ms, transform 300ms; }
+@media (min-width: 640px) { .post-card { padding: 2.5rem; } }
+.post-card:hover { box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 2px 6px 2px rgba(0,0,0,0.15); transform: translateY(-4px); }
+.post-card-meta { display: flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; font-family: "JetBrains Mono", monospace; color: var(--md-on-surface-variant); margin-bottom: 1rem; }
+.post-card-meta .sep { width: 0.25rem; height: 0.25rem; border-radius: 9999px; background: var(--md-outline); }
+.post-card h2 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.375rem; line-height: 1.375; color: var(--md-on-surface); margin-bottom: 0.875rem; transition: color 200ms; }
+@media (min-width: 640px) { .post-card h2 { font-size: 1.75rem; } }
+.post-card:hover h2 { color: var(--md-primary); }
+.post-card-excerpt { font-size: 0.9375rem; line-height: 1.625; color: var(--md-on-surface-variant); margin-bottom: 1.5rem; }
+@media (min-width: 640px) { .post-card-excerpt { font-size: 1rem; } }
+.post-card-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.post-card-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.post-card-tag { background: var(--md-secondary-container); color: var(--md-on-secondary-container); border-radius: 9999px; padding: 0.3rem 0.7rem; font-size: 0.75rem; font-weight: 500; font-family: "JetBrains Mono", monospace; }
+.post-card-read { color: var(--md-primary); font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.375rem; }
+
+.back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--md-on-surface-variant); font-size: 0.875rem; font-weight: 500; padding: 0.5rem 1rem; border-radius: 9999px; transition: color 150ms, background 150ms; }
+.back-link:hover { color: var(--md-on-surface); background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
+.back-link svg { transform: rotate(180deg); }
+
+.footer { padding: 3rem 0; border-top: 1px solid var(--md-outline-variant); }
+.footer-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 1rem; }
+@media (min-width: 640px) { .footer-inner { flex-direction: row; padding: 0 2rem; } }
+.footer-copy { font-size: 0.875rem; color: var(--md-on-surface-variant); }
+.footer-built { font-size: 0.75rem; color: var(--md-outline); font-family: "JetBrains Mono", monospace; display: flex; align-items: center; gap: 0.375rem; }
+.footer-built .dot { width: 0.375rem; height: 0.375rem; border-radius: 9999px; background: var(--md-primary); }
+
+::selection { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--md-surface-container-low); }
+::-webkit-scrollbar-thumb { background: var(--md-outline-variant); border-radius: 9999px; border: 2px solid var(--md-surface-container-low); }
+::-webkit-scrollbar-thumb:hover { background: var(--md-outline); }
+</style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-logo"><span class="accent">{</span>ThinkReally114<span class="accent">}</span></a>
+    <div class="navbar-links" id="nav-links"></div>
+    <div class="navbar-actions">
+      <button class="btn-icon" id="theme-btn" aria-label="toggle theme"></button>
+      <button class="btn-lang" id="lang-btn"></button>
+      <a class="btn-github" id="nav-github" href="#" target="_blank" rel="noopener noreferrer" aria-label="GitHub"></a>
+    </div>
+  </div>
+</nav>
+
+<section class="blog-hero" id="top">
+  <div class="container-narrow">
+    <a href="index.html" class="back-link" id="back-link"></a>
+    <div style="margin-top:1.5rem"><span class="index" id="blog-index"></span><span class="line"></span></div>
+    <h1 id="blog-title"></h1>
+    <p id="blog-subtitle"></p>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="container-narrow">
+    <div class="post-list" id="post-list"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-copy" id="footer-copy"></p>
+    <p class="footer-built" id="footer-built"></p>
+  </div>
+</footer>
+
+<script>
+var GITHUB_URL = "https://github.com/ThinkReally114";
+
+var _s = { g: function(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }, s: function(k, v) { try { localStorage.setItem(k, v); } catch(e) {} } };
+var lang = _s.g("lang") || "zh";
+var dark = (function() { var v = _s.g("theme"); if (v) return v === "dark"; try { return window.matchMedia("(prefers-color-scheme: dark)").matches; } catch(e) { return false; } })();
+
+var ICONS = {
+  github: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.05.78 2.12 0 1.53-.01 2.77-.01 3.15 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>',
+  githubSm: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.05.78 2.12 0 1.53-.01 2.77-.01 3.15 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>',
+  arrow: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  sun: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8l1.8-1.8M18 6l1.8-1.8"/></svg>',
+  moon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
+  globe: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M3 12h17M12 2.5c2.5 2.5 3.5 6 3.5 9.5s-1 7-3.5 9.5c-2.5-2.5-3.5-6-3.5-9.5s1-7 3.5-9.5z"/></svg>'
+};
+
+var dict = {
+  zh: {
+    nav: [
+      { href: "index.html#about", label: "关于" },
+      { href: "index.html#work", label: "项目" },
+      { href: "blog.html", label: "博客" },
+      { href: "index.html#contact", label: "联系" }
+    ],
+    langLabel: "EN",
+    blog: { title: "技术博客", subtitle: "开发过程中踩过的坑、学到的东西，和一些随想。" },
+    backLink: "← 返回首页",
+    readMore: "继续阅读",
+    minRead: "分钟阅读",
+    footer: { built: "用 M3 设计语言手工搭建", rights: "保留所有权利" },
+    posts: [
+      { title: "用纯 HTML/CSS/JS 做一个模拟手机系统——Source-UI 开发笔记", excerpt: "Source-UI 是我用纯前端技术做的一个模拟移动操作系统界面。没有用任何框架，只有 HTML5、CSS3 和原生 JavaScript。这篇文章记录了从最初的想法到 65 次提交的过程中，我学到的 CSS Variables、Flexbox/Grid 布局技巧，以及怎么用纯 CSS 实现流畅的界面动画。", date: "2026-05-09", tags: ["HTML", "CSS", "前端"], read: 8 },
+      { title: "PVPUtils 跨平台修复：Skia 原生库的自动加载方案", excerpt: "PVPUtils 只打包了 Windows 的 Skia .dll，在 Linux 和 macOS 上直接崩。我写了 pvputils-fix 这个 Fabric 模组，启动时检测平台、从 Maven 下载对应的原生库、SHA-256 校验、Mixin 预加载。本文详细拆解了整个技术方案，包括 AtomicBoolean 线程安全和多镜像回退设计。", date: "2026-07-18", tags: ["Java", "Minecraft", "Fabric"], read: 12 },
+      { title: "Fabric 模组开发入门：从 Mixin 到 Gradle 构建", excerpt: "开始做 Minecraft 模组时踩了不少坑——Mixin 注入的时机、Fabric Loader 的版本兼容、Gradle 构建配置。这篇文章是我整理的 Fabric 模组开发入门指南，涵盖环境搭建、Mixin 基础、Gradle 构建和 GitHub Actions CI 配置。", date: "2026-06-15", tags: ["Java", "Minecraft", "教程"], read: 15 }
+    ]
+  },
+  en: {
+    nav: [
+      { href: "index.html#about", label: "About" },
+      { href: "index.html#work", label: "Work" },
+      { href: "blog.html", label: "Blog" },
+      { href: "index.html#contact", label: "Contact" }
+    ],
+    langLabel: "中",
+    blog: { title: "Blog", subtitle: "Problems I've hit, things I've learned, and some thoughts along the way." },
+    backLink: "← Back to home",
+    readMore: "Read more",
+    minRead: "min read",
+    footer: { built: "Hand-built with Material 3", rights: "All rights reserved" },
+    posts: [
+      { title: "Building a Simulated Phone OS with Pure HTML/CSS/JS — Source-UI Dev Notes", excerpt: "Source-UI is a simulated mobile OS interface I built with pure front-end tech. No frameworks, just HTML5, CSS3, and vanilla JavaScript. This post covers what I learned about CSS Variables, Flexbox/Grid layouts, and pure-CSS interface animations over 65 commits.", date: "2026-05-09", tags: ["HTML", "CSS", "Frontend"], read: 8 },
+      { title: "Fixing PVPUtils Cross-Platform: Auto-Loading Skia Native Libraries", excerpt: "PVPUtils only bundles the Windows Skia .dll, crashing on Linux and macOS. I wrote pvputils-fix, a Fabric mod that detects the platform, downloads the matching native library from Maven, verifies SHA-256, and pre-loads via Mixin. This post breaks down the full technical approach.", date: "2026-07-18", tags: ["Java", "Minecraft", "Fabric"], read: 12 },
+      { title: "Getting Started with Fabric Mod Development: Mixin to Gradle", excerpt: "I hit a lot of pitfalls starting out with Minecraft modding—Mixin injection timing, Fabric Loader version compatibility, Gradle build config. This is my beginner's guide to Fabric mod development, covering setup, Mixin basics, Gradle builds, and GitHub Actions CI.", date: "2026-06-15", tags: ["Java", "Minecraft", "Tutorial"], read: 15 }
+    ]
+  }
+};
+
+function render() {
+  var t = dict[lang];
+
+  var navLinks = document.getElementById("nav-links");
+  navLinks.innerHTML = "";
+  t.nav.forEach(function(l) {
+    var a = document.createElement("a");
+    a.href = l.href; a.textContent = l.label;
+    navLinks.appendChild(a);
+  });
+  document.getElementById("lang-btn").innerHTML = ICONS.globe + " " + t.langLabel;
+  document.getElementById("nav-github").href = GITHUB_URL;
+  document.getElementById("nav-github").innerHTML = ICONS.github;
+
+  document.getElementById("back-link").innerHTML = ICONS.arrow + " " + t.backLink.replace("← ", "");
+  document.getElementById("blog-index").textContent = "Blog";
+  document.getElementById("blog-title").textContent = t.blog.title;
+  document.getElementById("blog-subtitle").textContent = t.blog.subtitle;
+
+  var postList = document.getElementById("post-list");
+  postList.innerHTML = "";
+  t.posts.forEach(function(post) {
+    var d = new Date(post.date);
+    var dateStr = d.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", { year: "numeric", month: "short", day: "numeric" });
+    var tagsHtml = "";
+    post.tags.forEach(function(tag) { tagsHtml += '<span class="post-card-tag">#' + tag + "</span>"; });
+    var card = document.createElement("a");
+    card.href = "#"; card.className = "post-card";
+    card.innerHTML =
+      '<div class="post-card-meta"><time>' + dateStr + '</time><span class="sep"></span><span>' + post.read + " " + t.minRead + "</span></div>" +
+      "<h2>" + post.title + "</h2>" +
+      '<p class="post-card-excerpt">' + post.excerpt + "</p>" +
+      '<div class="post-card-footer">' +
+        '<div class="post-card-tags">' + tagsHtml + "</div>" +
+        '<span class="post-card-read">' + t.readMore + " " + ICONS.arrow + "</span>" +
+      "</div>";
+    postList.appendChild(card);
+  });
+
+  document.getElementById("footer-copy").innerHTML = "© " + new Date().getFullYear() + " ThinkReally114. " + t.footer.rights + ".";
+  document.getElementById("footer-built").innerHTML = '<span class="dot"></span> ' + t.footer.built;
+  document.getElementById("theme-btn").innerHTML = dark ? ICONS.sun : ICONS.moon;
+}
+
+function applyTheme() {
+  document.documentElement.classList.toggle("dark", dark);
+  _s.s("theme", dark ? "dark" : "light");
+  document.getElementById("theme-btn").innerHTML = dark ? ICONS.sun : ICONS.moon;
+}
+
+function toggleLang() {
+  lang = lang === "zh" ? "en" : "zh";
+  _s.s("lang", lang);
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+  render();
+}
+
+function toggleTheme() {
+  dark = !dark;
+  applyTheme();
+}
+
+window.addEventListener("scroll", function() {
+  document.getElementById("navbar").classList.toggle("scrolled", window.scrollY > 12);
+}, { passive: true });
+
+try {
+  document.documentElement.classList.toggle("dark", dark);
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+  document.getElementById("lang-btn").addEventListener("click", toggleLang);
+  document.getElementById("theme-btn").addEventListener("click", toggleTheme);
+  render();
+} catch(e) {
+  document.body.innerHTML = '<pre style="padding:2rem;color:#c00;font-family:monospace;white-space:pre-wrap">' + (e && e.stack ? e.stack : String(e)) + '</pre>';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThinkReally114 — Developer & Minecraft Mod Author</title>
+<meta name="description" content="ThinkReally114 的开发者作品集 — Minecraft 模组开发与 Web UI 设计。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --md-primary: #00696C;
+  --md-on-primary: #FFFFFF;
+  --md-primary-container: #6FF6FB;
+  --md-on-primary-container: #002021;
+  --md-secondary: #4A6363;
+  --md-secondary-container: #CCE8E7;
+  --md-on-secondary-container: #051F1F;
+  --md-tertiary: #4C5F7C;
+  --md-tertiary-container: #D4E3FF;
+  --md-on-tertiary-container: #041C35;
+  --md-surface: #F4FBFA;
+  --md-on-surface: #161D1D;
+  --md-surface-variant: #DAE5E3;
+  --md-on-surface-variant: #3F4948;
+  --md-surface-container-lowest: #FFFFFF;
+  --md-surface-container-low: #EFF5F4;
+  --md-surface-container: #E9EFEE;
+  --md-surface-container-high: #E3E9E8;
+  --md-surface-container-highest: #DDE4E2;
+  --md-outline: #6F7979;
+  --md-outline-variant: #BEC9C7;
+  --md-background: #F4FBFA;
+  --md-on-background: #161D1D;
+  color-scheme: light;
+}
+.dark {
+  --md-primary: #4CDADF;
+  --md-on-primary: #003739;
+  --md-primary-container: #004F52;
+  --md-on-primary-container: #6FF6FB;
+  --md-secondary: #B1CCCB;
+  --md-secondary-container: #324B4B;
+  --md-on-secondary-container: #CCE8E7;
+  --md-tertiary: #B3C8E8;
+  --md-tertiary-container: #334863;
+  --md-on-tertiary-container: #D4E3FF;
+  --md-surface: #0E1514;
+  --md-on-surface: #DDE4E3;
+  --md-surface-variant: #3F4948;
+  --md-on-surface-variant: #BEC9C7;
+  --md-surface-container-lowest: #090F0F;
+  --md-surface-container-low: #161E1D;
+  --md-surface-container: #1B2322;
+  --md-surface-container-high: #252D2C;
+  --md-surface-container-highest: #303837;
+  --md-outline: #899392;
+  --md-outline-variant: #3F4948;
+  --md-background: #0E1514;
+  --md-on-background: #DDE4E3;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--md-background);
+  color: var(--md-on-background);
+  font-family: "Instrument Sans", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-kerning: normal;
+  line-height: 1.5;
+  transition: background 400ms cubic-bezier(0.2,0,0,1), color 400ms cubic-bezier(0.2,0,0,1);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 10% 0%, color-mix(in srgb, var(--md-primary) 12%, transparent) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 30%, color-mix(in srgb, var(--md-tertiary) 10%, transparent) 0%, transparent 55%),
+    linear-gradient(180deg, var(--md-background) 0%, var(--md-surface-container-low) 40%, var(--md-background) 100%);
+  background-attachment: fixed;
+}
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+
+/* ---------- Layout ---------- */
+.container { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
+.container-narrow { max-width: 56rem; margin: 0 auto; padding: 0 1.25rem; }
+section { padding: 5rem 0; scroll-margin-top: 4rem; }
+@media (min-width: 640px) { section { padding: 7rem 0; } .container, .container-narrow { padding: 0 2rem; } }
+
+/* ---------- Navbar ---------- */
+.navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 50; transition: all 300ms cubic-bezier(0.2,0,0,1); }
+.navbar.scrolled { background: var(--md-surface-container-low); box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 1px 3px 1px rgba(0,0,0,0.15); }
+.dark .navbar.scrolled { box-shadow: none; border-bottom: 1px solid var(--md-outline-variant); }
+.navbar-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; height: 4rem; display: flex; align-items: center; justify-content: space-between; }
+@media (min-width: 640px) { .navbar-inner { padding: 0 2rem; } }
+.navbar-logo { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.125rem; letter-spacing: -0.025em; color: var(--md-on-surface); }
+.navbar-logo .accent { color: var(--md-primary); }
+.navbar-links { display: none; align-items: center; gap: 0.25rem; }
+@media (min-width: 768px) { .navbar-links { display: flex; } }
+.navbar-links a { padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; color: var(--md-on-surface-variant); transition: color 150ms; }
+.navbar-links a:hover { color: var(--md-on-surface); background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
+.navbar-actions { display: flex; align-items: center; gap: 0.5rem; }
+.btn-icon { width: 2.5rem; height: 2.5rem; border: none; border-radius: 9999px; background: transparent; color: var(--md-on-surface-variant); display: grid; place-items: center; cursor: pointer; transition: color 150ms, background 150ms; }
+.btn-icon:hover { color: var(--md-on-surface); background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
+.btn-lang { height: 2.5rem; padding: 0 1rem; border: none; border-radius: 9999px; background: var(--md-secondary-container); color: var(--md-on-secondary-container); font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.375rem; cursor: pointer; transition: filter 150ms; }
+.btn-lang:hover { filter: brightness(0.96); }
+.btn-github { width: 2.5rem; height: 2.5rem; border: none; border-radius: 9999px; background: var(--md-primary); color: var(--md-on-primary); display: grid; place-items: center; cursor: pointer; transition: filter 150ms; }
+.btn-github:hover { filter: brightness(1.1); }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; padding-top: 8rem; padding-bottom: 5rem; overflow: hidden; }
+@media (min-width: 640px) { .hero { padding-top: 10rem; padding-bottom: 7rem; } }
+.hero-glow { position: absolute; top: -6rem; right: -6rem; width: 28rem; height: 28rem; border-radius: 9999px; opacity: 0.12; filter: blur(64px); background: var(--md-primary); pointer-events: none; }
+.hero-content { max-width: 56rem; position: relative; }
+.hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--md-tertiary-container); color: var(--md-on-tertiary-container); border-radius: 9999px; padding: 0.375rem 0.875rem; font-size: 0.75rem; font-weight: 600; font-family: "JetBrains Mono", monospace; margin-bottom: 1.5rem; }
+.hero-badge .dot { width: 0.5rem; height: 0.5rem; border-radius: 9999px; background: var(--md-tertiary); }
+.hero h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 3rem; letter-spacing: -0.025em; line-height: 1.02; color: var(--md-on-surface); margin-bottom: 1.75rem; }
+@media (min-width: 640px) { .hero h1 { font-size: 4.5rem; } }
+.hero h1 .accent { color: var(--md-primary); }
+.hero-tagline { max-width: 42rem; font-size: 1.125rem; line-height: 1.625; color: var(--md-on-surface-variant); margin-bottom: 2.5rem; }
+@media (min-width: 640px) { .hero-tagline { font-size: 1.25rem; } }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 4rem; }
+.btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--md-primary); color: var(--md-on-primary); border-radius: 9999px; padding: 0.875rem 1.5rem; font-size: 0.875rem; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 1px 3px 1px rgba(0,0,0,0.15); transition: box-shadow 200ms; }
+.btn-primary:hover { box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 2px 6px 2px rgba(0,0,0,0.15); }
+.btn-secondary { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--md-surface-container-high); color: var(--md-on-surface); border: 1px solid var(--md-outline-variant); border-radius: 9999px; padding: 0.875rem 1.5rem; font-size: 0.875rem; font-weight: 600; transition: box-shadow 200ms; }
+.btn-secondary:hover { box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 1px 3px 1px rgba(0,0,0,0.15); }
+.hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 32rem; }
+@media (min-width: 640px) { .hero-stats { gap: 2rem; } }
+.hero-stat-num { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.875rem; color: var(--md-primary); font-variant-numeric: tabular-nums; }
+@media (min-width: 640px) { .hero-stat-num { font-size: 2.25rem; } }
+.hero-stat-label { font-size: 0.75rem; color: var(--md-on-surface-variant); margin-top: 0.25rem; }
+@media (min-width: 640px) { .hero-stat-label { font-size: 0.875rem; } }
+
+/* ---------- Section Header ---------- */
+.section-header { margin-bottom: 3rem; }
+@media (min-width: 640px) { .section-header { margin-bottom: 4rem; } }
+.section-header .index { font-family: "JetBrains Mono", monospace; font-size: 0.875rem; color: var(--md-primary); font-weight: 500; font-variant-numeric: tabular-nums; }
+.section-header .line { display: inline-block; height: 1px; width: 3rem; background: var(--md-outline-variant); vertical-align: middle; margin-left: 1rem; }
+.section-header h2 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.875rem; letter-spacing: -0.025em; color: var(--md-on-surface); margin: 1rem 0; }
+@media (min-width: 640px) { .section-header h2 { font-size: 3rem; } }
+.section-header p { max-width: 42rem; font-size: 1rem; line-height: 1.625; color: var(--md-on-surface-variant); }
+@media (min-width: 640px) { .section-header p { font-size: 1.125rem; } }
+
+/* ---------- Project Cards ---------- */
+.project-grid { display: grid; gap: 1.5rem; }
+@media (min-width: 640px) { .project-grid { grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; } .project-card.offset { margin-top: 4rem; } }
+.project-card { background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); border-radius: 28px; padding: 1.75rem; transition: box-shadow 300ms, transform 300ms; }
+@media (min-width: 640px) { .project-card { padding: 2.25rem; } }
+.project-card:hover { box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 2px 6px 2px rgba(0,0,0,0.15); transform: translateY(-4px); }
+.project-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
+.project-card-title { display: flex; align-items: center; gap: 0.75rem; }
+.project-card-dot { width: 0.75rem; height: 0.75rem; border-radius: 9999px; flex-shrink: 0; }
+.project-card h3 { font-family: "JetBrains Mono", monospace; font-size: 1.25rem; font-weight: 600; color: var(--md-on-surface); }
+@media (min-width: 640px) { .project-card h3 { font-size: 1.5rem; } }
+.project-card-stats { display: flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; font-family: "JetBrains Mono", monospace; color: var(--md-on-surface-variant); flex-shrink: 0; }
+.project-card-stats span { display: flex; align-items: center; gap: 0.25rem; }
+.project-card-desc { font-size: 0.9375rem; line-height: 1.625; color: var(--md-on-surface-variant); margin-bottom: 1.5rem; }
+@media (min-width: 640px) { .project-card-desc { font-size: 1rem; } }
+.project-card-highlights { margin-bottom: 1.75rem; }
+.project-card-highlights li { display: flex; align-items: flex-start; gap: 0.625rem; font-size: 0.875rem; color: var(--md-on-surface-variant); margin-bottom: 0.625rem; }
+.project-card-highlights svg { margin-top: 0.125rem; flex-shrink: 0; color: var(--md-primary); }
+.project-card-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 0.625rem; }
+.project-card-lang { font-family: "JetBrains Mono", monospace; font-size: 0.75rem; font-weight: 500; background: var(--md-tertiary-container); color: var(--md-on-tertiary-container); border-radius: 9999px; padding: 0.375rem 0.75rem; }
+.project-card-spacer { flex: 1; }
+.btn-sm { display: inline-flex; align-items: center; gap: 0.5rem; border-radius: 9999px; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 600; transition: box-shadow 200ms; cursor: pointer; text-decoration: none; }
+.btn-sm-repo { background: var(--md-surface-container-high); color: var(--md-on-surface); border: 1px solid var(--md-outline-variant); }
+.btn-sm-repo:hover { box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 1px 3px 1px rgba(0,0,0,0.15); }
+.btn-sm-demo { background: var(--md-primary); color: var(--md-on-primary); }
+.btn-sm-demo:hover { filter: brightness(1.1); }
+
+/* ---------- Blog Cards ---------- */
+.blog-grid { display: grid; gap: 1.5rem; }
+@media (min-width: 640px) { .blog-grid { grid-template-columns: repeat(3, 1fr); gap: 1.75rem; align-items: start; } .blog-card.offset { transform: translateY(2.5rem); } }
+.blog-card { display: block; background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); border-radius: 24px; padding: 1.5rem; transition: box-shadow 300ms, transform 300ms; }
+@media (min-width: 640px) { .blog-card { padding: 1.75rem; } }
+.blog-card:hover { box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 2px 6px 2px rgba(0,0,0,0.15); transform: translateY(-4px); }
+.blog-card-meta { display: flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; font-family: "JetBrains Mono", monospace; color: var(--md-on-surface-variant); margin-bottom: 1rem; }
+.blog-card-meta .sep { width: 0.25rem; height: 0.25rem; border-radius: 9999px; background: var(--md-outline); }
+.blog-card h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.25rem; line-height: 1.375; color: var(--md-on-surface); margin-bottom: 0.75rem; transition: color 200ms; }
+@media (min-width: 640px) { .blog-card h3 { font-size: 1.5rem; } }
+.blog-card:hover h3 { color: var(--md-primary); }
+.blog-card-excerpt { font-size: 0.875rem; line-height: 1.625; color: var(--md-on-surface-variant); margin-bottom: 1.25rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.blog-card-footer { display: flex; align-items: center; justify-content: space-between; }
+.blog-card-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.blog-card-tag { background: var(--md-secondary-container); color: var(--md-on-secondary-container); border-radius: 9999px; padding: 0.25rem 0.625rem; font-size: 0.75rem; font-weight: 500; font-family: "JetBrains Mono", monospace; }
+.blog-card-read { color: var(--md-primary); font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.25rem; opacity: 0; transform: translateX(-4px); transition: opacity 200ms, transform 200ms; }
+.blog-card:hover .blog-card-read { opacity: 1; transform: translateX(0); }
+
+/* ---------- Blog Link Card ---------- */
+.blog-link-card { display: block; background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); border-radius: 28px; padding: 2rem 2.25rem; transition: box-shadow 300ms, transform 300ms; text-decoration: none; }
+.blog-link-card:hover { box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 2px 6px 2px rgba(0,0,0,0.15); transform: translateY(-4px); }
+.blog-link-card .index { font-family: "JetBrains Mono", monospace; font-size: 0.875rem; color: var(--md-primary); font-weight: 500; }
+.blog-link-card h2 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.5rem; letter-spacing: -0.025em; color: var(--md-on-surface); margin: 0.75rem 0 0.5rem; }
+@media (min-width: 640px) { .blog-link-card h2 { font-size: 2rem; } }
+.blog-link-card p { font-size: 1rem; color: var(--md-on-surface-variant); margin-bottom: 1.25rem; }
+.blog-link-card .visit { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--md-primary); font-size: 0.875rem; font-weight: 600; }
+
+/* ---------- About ---------- */
+.about-text p { font-size: 1.125rem; line-height: 1.625; margin-bottom: 1.25rem; }
+.about-text p:first-child { color: var(--md-on-surface); }
+.about-text p:nth-child(n+2) { color: var(--md-on-surface-variant); }
+.about-stack-label { font-family: "JetBrains Mono", monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--md-outline); margin-bottom: 1rem; margin-top: 1.5rem; }
+.about-stack { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.about-stack span { background: var(--md-surface-container-high); color: var(--md-on-surface); border-radius: 0.5rem; padding: 0.5rem 0.875rem; font-size: 0.875rem; font-family: "JetBrains Mono", monospace; font-weight: 500; }
+
+/* ---------- Contact ---------- */
+.contact-card { background: var(--md-surface-container); border-radius: 36px; padding: 2rem; box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 1px 3px 1px rgba(0,0,0,0.15); text-align: center; }
+@media (min-width: 640px) { .contact-card { padding: 3.5rem; } }
+.dark .contact-card { box-shadow: none; border: 1px solid var(--md-outline-variant); }
+.contact-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--md-primary-container); color: var(--md-on-primary-container); border-radius: 9999px; padding: 0.375rem 0.875rem; font-size: 0.75rem; font-weight: 600; margin-bottom: 1.5rem; }
+.contact-badge .dot { width: 0.5rem; height: 0.5rem; border-radius: 9999px; background: var(--md-on-primary-container); }
+.contact-card h2 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.875rem; letter-spacing: -0.025em; color: var(--md-on-surface); margin-bottom: 1rem; }
+@media (min-width: 640px) { .contact-card h2 { font-size: 3rem; } }
+.contact-card .subtitle { max-width: 36rem; margin: 0 auto 2.5rem; font-size: 1rem; color: var(--md-on-surface-variant); }
+@media (min-width: 640px) { .contact-card .subtitle { font-size: 1.125rem; } }
+.contact-channels { display: grid; gap: 1rem; max-width: 42rem; margin: 0 auto; }
+@media (min-width: 640px) { .contact-channels { grid-template-columns: repeat(3, 1fr); } }
+.contact-channel { display: block; background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); border-radius: 1.5rem; padding: 1.5rem; transition: box-shadow 200ms; text-align: center; }
+.contact-channel:hover { box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 1px 3px 1px rgba(0,0,0,0.15); }
+.contact-channel .icon { color: var(--md-primary); margin-bottom: 0.75rem; display: inline-flex; }
+.contact-channel .label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--md-outline); margin-bottom: 0.25rem; }
+.contact-channel .value { font-family: "JetBrains Mono", monospace; font-size: 0.875rem; font-weight: 500; color: var(--md-on-surface); }
+
+/* ---------- Footer ---------- */
+.footer { padding: 3rem 0; border-top: 1px solid var(--md-outline-variant); }
+.footer-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 1rem; }
+@media (min-width: 640px) { .footer-inner { flex-direction: row; padding: 0 2rem; } }
+.footer-copy { font-size: 0.875rem; color: var(--md-on-surface-variant); }
+.footer-built { font-size: 0.75rem; color: var(--md-outline); font-family: "JetBrains Mono", monospace; display: flex; align-items: center; gap: 0.375rem; }
+.footer-built .dot { width: 0.375rem; height: 0.375rem; border-radius: 9999px; background: var(--md-primary); }
+
+/* ---------- Misc ---------- */
+::selection { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--md-surface-container-low); }
+::-webkit-scrollbar-thumb { background: var(--md-outline-variant); border-radius: 9999px; border: 2px solid var(--md-surface-container-low); }
+::-webkit-scrollbar-thumb:hover { background: var(--md-outline); }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="#top" class="navbar-logo"><span class="accent">{</span>ThinkReally114<span class="accent">}</span></a>
+    <div class="navbar-links" id="nav-links"></div>
+    <div class="navbar-actions">
+      <button class="btn-icon" id="theme-btn" aria-label="toggle theme"></button>
+      <button class="btn-lang" id="lang-btn"></button>
+      <a class="btn-github" id="nav-github" href="#" target="_blank" rel="noopener noreferrer" aria-label="GitHub"></a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="top">
+  <div class="hero-glow"></div>
+  <div class="container-narrow hero-content">
+    <div class="hero-badge" id="hero-badge"></div>
+    <h1 id="hero-name"></h1>
+    <p class="hero-tagline" id="hero-tagline"></p>
+    <div class="hero-cta" id="hero-cta"></div>
+    <dl class="hero-stats" id="hero-stats"></dl>
+  </div>
+</section>
+
+<!-- Work -->
+<section id="work">
+  <div class="container">
+    <div class="section-header" id="work-header"></div>
+    <div class="project-grid" id="project-grid"></div>
+  </div>
+</section>
+
+<!-- Blog Link -->
+<section id="blog-link">
+  <div class="container">
+    <a href="blog.html" id="blog-link-card" class="blog-link-card"></a>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="container-narrow">
+    <div class="section-header" id="about-header"></div>
+    <div class="about-text" id="about-text"></div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="container-narrow">
+    <div class="contact-card">
+      <div class="contact-badge" id="contact-badge"></div>
+      <h2 id="contact-title"></h2>
+      <p class="subtitle" id="contact-subtitle"></p>
+      <div class="contact-channels" id="contact-channels"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-copy" id="footer-copy"></p>
+    <p class="footer-built" id="footer-built"></p>
+  </div>
+</footer>
+
+<script>
+var GITHUB_URL = "https://github.com/ThinkReally114";
+
+var dict = {
+  zh: {
+    nav: [
+      { href: "#about", label: "关于" },
+      { href: "#work", label: "项目" },
+      { href: "blog.html", label: "博客" },
+      { href: "#contact", label: "联系" }
+    ],
+    langLabel: "EN",
+    hero: {
+      eyebrow: "开发者 · Minecraft Mod 作者",
+      name: "ThinkReally114",
+      tagline: "专注于 Minecraft 模组开发与 Web UI 设计，用代码让游戏和界面变得更好玩。",
+      ctaWork: "看看作品",
+      ctaGithub: "访问 GitHub",
+      stats: [
+        { num: "6", label: "公开仓库" },
+        { num: "11", label: "Star 总数" },
+        { num: "4", label: "GitHub 关注者" }
+      ]
+    },
+    work: { title: "精选项目", subtitle: "从 Minecraft 模组到模拟操作系统界面，我喜欢把想法变成能跑的东西。", viewRepo: "查看仓库", liveDemo: "在线演示" },
+    blogLink: { title: "技术博客", subtitle: "写一些开发过程中踩过的坑和学到的东西。", visit: "前往博客 →" },
+    about: {
+      title: "关于我",
+      p1: "我是 ThinkReally114，一名开发者和 Minecraft 模组作者。从 2025 年开始活跃在 GitHub 上，主要折腾 Minecraft Fabric 模组、Web 前端界面和一些跨平台工具。",
+      p2: "我做的项目大多源自自己的需求——PVPUtils 在 Linux 上崩了就写了个修复 mod，想玩模拟系统就做了 Source-UI。比起空想，我更喜欢直接动手解决问题。",
+      p3: "主力语言是 Java、HTML/CSS/JavaScript 和 TypeScript。平时也关注 Minecraft 模组社区的技术讨论。欢迎在 GitHub 上交流！",
+      stack: "技术栈",
+      stackList: ["Java", "HTML", "CSS", "JavaScript", "TypeScript", "Vue", "Electron", "Fabric"]
+    },
+    contact: { title: "保持联系", subtitle: "合作、问题或只是想聊聊，都可以直接找我。", available: "🌴 目前在度假中", email: "邮件", github: "GitHub", location: "GitHub @ThinkReally114" },
+    footer: { built: "用 M3 设计语言手工搭建", rights: "保留所有权利" },
+    projects: [
+      { name: "Source-UI", desc: "一个基于 HTML/CSS/JavaScript 的模拟移动操作系统界面。支持多应用、音乐播放器和完整的 UI 交互，纯前端实现，无需后端。已获得 65 次提交和社区贡献。", highlights: ["纯原生 HTML/CSS/JS，零依赖", "CSS Variables + Flexbox/Grid 响应式布局", "包含音乐播放器、404 页面等完整功能", "支持简体中文、繁体中文、英文三语"] },
+      { name: "pvputils-fix", desc: "一个 Fabric 客户端模组，修复 PVPUtils 在 Linux、macOS 和 Android 上因缺少 Skia 原生库而崩溃的问题。启动时自动检测平台并下载对应的原生库。", highlights: ["跨平台支持：Windows / Linux / macOS / Android", "SHA-256 校验确保下载库完整性", "AtomicBoolean 线程安全加载", "阿里云/腾讯/Google/Maven Central 多镜像回退"] }
+    ]
+  },
+  en: {
+    nav: [
+      { href: "#about", label: "About" },
+      { href: "#work", label: "Work" },
+      { href: "blog.html", label: "Blog" },
+      { href: "#contact", label: "Contact" }
+    ],
+    langLabel: "中",
+    hero: {
+      eyebrow: "Developer · Minecraft Mod Author",
+      name: "ThinkReally114",
+      tagline: "Focused on Minecraft mod development and Web UI design—turning ideas into things that actually run.",
+      ctaWork: "See selected work",
+      ctaGithub: "Visit GitHub",
+      stats: [
+        { num: "6", label: "public repos" },
+        { num: "11", label: "total stars" },
+        { num: "4", label: "GitHub followers" }
+      ]
+    },
+    work: { title: "Selected Work", subtitle: "From Minecraft mods to a simulated OS interface, I like building things that work.", viewRepo: "View repository", liveDemo: "Live demo" },
+    blogLink: { title: "Blog", subtitle: "Notes on problems I've hit and things I've learned along the way.", visit: "Visit blog →" },
+    about: {
+      title: "About",
+      p1: "I'm ThinkReally114, a developer and Minecraft mod author. I've been active on GitHub since 2025, mostly working on Minecraft Fabric mods, web front-end interfaces, and cross-platform tools.",
+      p2: "Most of my projects come from my own needs—PVPUtils crashed on Linux so I wrote a fix mod; I wanted a simulated OS so I built Source-UI. I'd rather just build something than just think about it.",
+      p3: "My main languages are Java, HTML/CSS/JavaScript, and TypeScript. I'm also active in the Minecraft modding community. Feel free to reach out on GitHub!",
+      stack: "Stack",
+      stackList: ["Java", "HTML", "CSS", "JavaScript", "TypeScript", "Vue", "Electron", "Fabric"]
+    },
+    contact: { title: "Get in touch", subtitle: "Collaboration, questions, or just want to chat—reach out directly.", available: "🌴 Currently on vacation", email: "Email", github: "GitHub", location: "GitHub @ThinkReally114" },
+    footer: { built: "Hand-built with Material 3", rights: "All rights reserved" },
+    projects: [
+      { name: "Source-UI", desc: "A simulated mobile OS interface built with HTML/CSS/JavaScript. Supports multiple apps, a music player, and full UI interaction—pure front-end, no backend. 65 commits and community contributions.", highlights: ["Pure native HTML/CSS/JS, zero dependencies", "CSS Variables + Flexbox/Grid responsive layout", "Includes music player, 404 page, and more", "Supports Simplified Chinese, Traditional Chinese, English"] },
+      { name: "pvputils-fix", desc: "A Fabric client-side mod that fixes PVPUtils crashing on Linux, macOS, and Android due to missing Skia native libraries. Automatically detects the platform and downloads the correct native library at startup.", highlights: ["Cross-platform: Windows / Linux / macOS / Android", "SHA-256 checksum verification for downloaded libraries", "AtomicBoolean thread-safe loading", "Aliyun/Tencent/Google/Maven Central multi-mirror fallback"] }
+    ]
+  }
+};
+
+var repoMeta = [
+  { repo: "Source-UI", lang: "HTML", live: "https://nebulacn.qzz.io/", color: "#E34F26" },
+  { repo: "pvputils-fix", lang: "Java", live: "https://modrinth.com/mod/pvputils-fix", color: "#E76F00" }
+];
+
+var _s = { g: function(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }, s: function(k, v) { try { localStorage.setItem(k, v); } catch(e) {} } };
+var lang = _s.g("lang") || "zh";
+var dark = (function() { var v = _s.g("theme"); if (v) return v === "dark"; try { return window.matchMedia("(prefers-color-scheme: dark)").matches; } catch(e) { return false; } })();
+
+var ICONS = {
+  github: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.05.78 2.12 0 1.53-.01 2.77-.01 3.15 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>',
+  githubSm: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.05.78 2.12 0 1.53-.01 2.77-.01 3.15 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>',
+  star: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 5.88 6.49.94-4.7 4.58 1.11 6.46L12 17.27l-5.8 3.05 1.1-6.46-4.69-4.58 6.49-.94L12 2.5z"/></svg>',
+  fork: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M6 8.5v3a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-3M12 13.5v2"/></svg>',
+  arrow: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  check: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>',
+  sun: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8l1.8-1.8M18 6l1.8-1.8"/></svg>',
+  moon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
+  globe: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M3 12h17M12 2.5c2.5 2.5 3.5 6 3.5 9.5s-1 7-3.5 9.5c-2.5-2.5-3.5-6-3.5-9.5s1-7 3.5-9.5z"/></svg>',
+  email: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7l8 6 8-6"/></svg>',
+  location: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>'
+};
+
+function render() {
+  var t = dict[lang];
+
+  // Navbar
+  var navLinks = document.getElementById("nav-links");
+  navLinks.innerHTML = "";
+  t.nav.forEach(function(l) {
+    var a = document.createElement("a");
+    a.href = l.href; a.textContent = l.label;
+    navLinks.appendChild(a);
+  });
+  document.getElementById("lang-btn").innerHTML = ICONS.globe + " " + t.langLabel;
+  document.getElementById("nav-github").href = GITHUB_URL;
+  document.getElementById("nav-github").innerHTML = ICONS.github;
+
+  // Hero
+  document.getElementById("hero-badge").innerHTML = '<span class="dot"></span>' + t.hero.eyebrow;
+  document.getElementById("hero-name").innerHTML = t.hero.name + '<span class="accent">.</span>';
+  document.getElementById("hero-tagline").textContent = t.hero.tagline;
+  document.getElementById("hero-cta").innerHTML =
+    '<a href="#work" class="btn-primary">' + t.hero.ctaWork + " " + ICONS.arrow + "</a>" +
+    '<a href="' + GITHUB_URL + '" target="_blank" rel="noopener noreferrer" class="btn-secondary">' + ICONS.githubSm + " " + t.hero.ctaGithub + "</a>";
+  var statsHtml = "";
+  t.hero.stats.forEach(function(s) {
+    statsHtml += '<div><dt class="hero-stat-num">' + s.num + '</dt><dd class="hero-stat-label">' + s.label + "</dd></div>";
+  });
+  document.getElementById("hero-stats").innerHTML = statsHtml;
+
+  // Work header
+  document.getElementById("work-header").innerHTML =
+    '<div><span class="index">01</span><span class="line"></span></div>' +
+    "<h2>" + t.work.title + "</h2>" +
+    "<p>" + t.work.subtitle + "</p>";
+
+  // Projects
+  var grid = document.getElementById("project-grid");
+  grid.innerHTML = "";
+  t.projects.forEach(function(p, i) {
+    var meta = repoMeta[i];
+    var hlHtml = "";
+    p.highlights.forEach(function(hl) {
+      hlHtml += "<li>" + ICONS.check + "<span>" + hl + "</span></li>";
+    });
+    var card = document.createElement("div");
+    card.className = "project-card" + (i === 1 ? " offset" : "");
+    card.innerHTML =
+      '<div class="project-card-head">' +
+        '<div class="project-card-title"><span class="project-card-dot" style="background:' + meta.color + '"></span><h3>' + p.name + "</h3></div>" +
+        '<div class="project-card-stats" id="stats-' + i + '"><span>' + ICONS.star + ' —</span><span>' + ICONS.fork + " —</span></div>" +
+      "</div>" +
+      '<p class="project-card-desc">' + p.desc + "</p>" +
+      '<ul class="project-card-highlights">' + hlHtml + "</ul>" +
+      '<div class="project-card-footer">' +
+        '<span class="project-card-lang">' + meta.lang + "</span>" +
+        '<span class="project-card-spacer"></span>' +
+        '<a href="' + GITHUB_URL + "/" + meta.repo + '" target="_blank" rel="noopener noreferrer" class="btn-sm btn-sm-repo">' + ICONS.githubSm + " " + t.work.viewRepo + "</a>" +
+        '<a href="' + meta.live + '" target="_blank" rel="noopener noreferrer" class="btn-sm btn-sm-demo">' + t.work.liveDemo + " " + ICONS.arrow + "</a>" +
+      "</div>";
+    grid.appendChild(card);
+
+    // Fetch GitHub stats
+    (function(idx, repoName) {
+      if (typeof fetch === "undefined") return;
+      fetch("https://api.github.com/repos/ThinkReally114/" + repoName)
+        .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+        .then(function(d) {
+          var el = document.getElementById("stats-" + idx);
+          if (el) el.innerHTML = "<span>" + ICONS.star + " " + d.stargazers_count.toLocaleString() + "</span><span>" + ICONS.fork + " " + d.forks_count.toLocaleString() + "</span>";
+        })
+        .catch(function() {});
+    })(i, meta.repo);
+  });
+
+  // Blog link
+  document.getElementById("blog-link-card").innerHTML =
+    '<span class="index">02</span>' +
+    "<h2>" + t.blogLink.title + "</h2>" +
+    "<p>" + t.blogLink.subtitle + "</p>" +
+    '<span class="visit">' + t.blogLink.visit + "</span>";
+
+  // About
+  document.getElementById("about-header").innerHTML =
+    '<div><span class="index">03</span><span class="line"></span></div>' +
+    "<h2>" + t.about.title + "</h2>";
+  var stackHtml = "";
+  t.about.stackList.forEach(function(s) { stackHtml += "<span>" + s + "</span>"; });
+  document.getElementById("about-text").innerHTML =
+    "<p>" + t.about.p1 + "</p><p>" + t.about.p2 + "</p><p>" + t.about.p3 + "</p>" +
+    '<div class="about-stack-label">' + t.about.stack + "</div>" +
+    '<div class="about-stack">' + stackHtml + "</div>";
+
+  // Contact
+  document.getElementById("contact-badge").innerHTML = '<span class="dot"></span>' + t.contact.available;
+  document.getElementById("contact-title").textContent = t.contact.title;
+  document.getElementById("contact-subtitle").textContent = t.contact.subtitle;
+  var channels = [
+    { label: t.contact.github, value: "github.com/ThinkReally114", href: GITHUB_URL, icon: ICONS.github },
+    { label: "Status", value: t.contact.available, href: null, icon: ICONS.location }
+  ];
+  var channelsHtml = "";
+  channels.forEach(function(c) {
+    var inner = '<span class="icon">' + c.icon + "</span>" +
+      '<span class="label">' + c.label + "</span>" +
+      '<span class="value">' + c.value + "</span>";
+    if (c.href) {
+      var target = c.href.indexOf("http") === 0 ? ' target="_blank" rel="noopener noreferrer"' : "";
+      channelsHtml += '<a href="' + c.href + '"' + target + ' class="contact-channel">' + inner + "</a>";
+    } else {
+      channelsHtml += '<div class="contact-channel">' + inner + "</div>";
+    }
+  });
+  document.getElementById("contact-channels").innerHTML = channelsHtml;
+
+  // Footer
+  document.getElementById("footer-copy").innerHTML = "© " + new Date().getFullYear() + " " + t.hero.name + ". " + t.footer.rights + ".";
+  document.getElementById("footer-built").innerHTML = '<span class="dot"></span> ' + t.footer.built;
+
+  // Theme button
+  document.getElementById("theme-btn").innerHTML = dark ? ICONS.sun : ICONS.moon;
+}
+
+function applyTheme() {
+  document.documentElement.classList.toggle("dark", dark);
+  _s.s("theme", dark ? "dark" : "light");
+  document.getElementById("theme-btn").innerHTML = dark ? ICONS.sun : ICONS.moon;
+}
+
+function toggleLang() {
+  lang = lang === "zh" ? "en" : "zh";
+  _s.s("lang", lang);
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+  render();
+}
+
+function toggleTheme() {
+  dark = !dark;
+  applyTheme();
+}
+
+// Navbar scroll
+window.addEventListener("scroll", function() {
+  document.getElementById("navbar").classList.toggle("scrolled", window.scrollY > 12);
+}, { passive: true });
+
+// Init
+try {
+  document.documentElement.classList.toggle("dark", dark);
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+  document.getElementById("lang-btn").addEventListener("click", toggleLang);
+  document.getElementById("theme-btn").addEventListener("click", toggleTheme);
+  render();
+} catch(e) {
+  document.body.innerHTML = '<pre style="padding:2rem;color:#c00;font-family:monospace;white-space:pre-wrap">' + (e && e.stack ? e.stack : String(e)) + '</pre>';
+}
+</script>
+</body>
+</html>
