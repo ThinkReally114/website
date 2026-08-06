@@ -1,1 +1,18 @@
+#变量机制：Documentreleaseorupdatetime是文档的最新更新时间
+#Samedayupdatesequence如果时间是同一天，那么按这个顺序显示，数值越小优先级越低
+#如果后面的Whethertosetthetop为true则这个数值不生效
+#Documenttitle是文档标题
+#Briefintroductionofdocuments是文档简介
+#IsthereaGiteeshunt是否拥有Gitee的中国加速节点
+#URLtoGitee如果拥有Gitee加速节点就指向填入的url
+#URLtoGithub指向文档的url
+#Whethertosetthetop是否置顶
 
+Documentreleaseorupdatetime=20260806
+Samedayupdatesequence=1
+Documenttitle=测试
+Briefintroductionofdocuments=这是一个测试文章
+IsthereaGiteeshunt=false
+URLtoGitee=false
+URLtoGithub=
+Whethertosetthetop=true
