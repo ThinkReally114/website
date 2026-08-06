@@ -130,9 +130,49 @@ section { padding: 5rem 0; scroll-margin-top: 4rem; }
 .post-card-tag { background: var(--md-secondary-container); color: var(--md-on-secondary-container); border-radius: 9999px; padding: 0.3rem 0.7rem; font-size: 0.75rem; font-weight: 500; font-family: "JetBrains Mono", monospace; }
 .post-card-read { color: var(--md-primary); font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.375rem; }
 
-.back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--md-on-surface-variant); font-size: 0.875rem; font-weight: 500; padding: 0.5rem 1rem; border-radius: 9999px; transition: color 150ms, background 150ms; }
+.back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--md-on-surface-variant); font-size: 0.875rem; font-weight: 500; padding: 0.5rem 1rem; border-radius: 9999px; transition: color 150ms, background 150ms; cursor: pointer; background: none; border: none; font-family: inherit; }
 .back-link:hover { color: var(--md-on-surface); background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
 .back-link svg { transform: rotate(180deg); }
+
+.article-view { display: none; }
+.article-view.active, .article-view.closing { display: block; }
+.article-view.active { animation: articleIn 350ms cubic-bezier(0.2,0,0,1) 100ms both; }
+.article-view.closing { animation: articleOut 200ms ease both; }
+@keyframes articleIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes articleOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-8px); } }
+.article-meta { display: flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; font-family: "JetBrains Mono", monospace; color: var(--md-on-surface-variant); margin-bottom: 1rem; }
+.article-meta .sep { width: 0.25rem; height: 0.25rem; border-radius: 9999px; background: var(--md-outline); }
+.article-view h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.75rem; letter-spacing: -0.025em; color: var(--md-on-surface); margin-bottom: 1.5rem; line-height: 1.2; }
+@media (min-width: 640px) { .article-view h1 { font-size: 2.5rem; } }
+.article-body { font-size: 1rem; line-height: 1.75; color: var(--md-on-surface); }
+@media (min-width: 640px) { .article-body { font-size: 1.0625rem; } }
+.article-body h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.5rem; margin: 2rem 0 1rem; color: var(--md-on-surface); }
+@media (min-width: 640px) { .article-body h1 { font-size: 1.875rem; } }
+.article-body h2 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.25rem; margin: 1.75rem 0 0.875rem; color: var(--md-on-surface); }
+@media (min-width: 640px) { .article-body h2 { font-size: 1.5rem; } }
+.article-body h3 { font-weight: 600; font-size: 1.125rem; margin: 1.5rem 0 0.75rem; color: var(--md-on-surface); }
+.article-body p { margin-bottom: 1.25rem; }
+.article-body ul, .article-body ol { margin: 0 0 1.25rem 1.5rem; }
+.article-body ul { list-style: disc; }
+.article-body ol { list-style: decimal; }
+.article-body li { margin-bottom: 0.5rem; line-height: 1.625; }
+.article-body code { font-family: "JetBrains Mono", monospace; font-size: 0.875em; background: var(--md-surface-container-high); padding: 0.15em 0.4em; border-radius: 0.375rem; }
+.article-body pre { background: var(--md-surface-container-high); border: 1px solid var(--md-outline-variant); border-radius: 1rem; padding: 1.25rem; overflow-x: auto; margin: 0 0 1.25rem; }
+.article-body pre code { background: none; padding: 0; font-size: 0.875rem; line-height: 1.625; }
+.article-body blockquote { border-left: 3px solid var(--md-primary); padding-left: 1rem; margin: 0 0 1.25rem; color: var(--md-on-surface-variant); font-style: italic; }
+.article-body a { color: var(--md-primary); text-decoration: underline; text-underline-offset: 2px; }
+.article-body img { max-width: 100%; border-radius: 1rem; margin: 1rem 0; }
+.article-body hr { border: none; border-top: 1px solid var(--md-outline-variant); margin: 2rem 0; }
+.article-body table { width: 100%; border-collapse: collapse; margin: 0 0 1.25rem; }
+.article-body th, .article-body td { border: 1px solid var(--md-outline-variant); padding: 0.625rem 0.875rem; text-align: left; }
+.article-body th { background: var(--md-surface-container-high); font-weight: 600; }
+.article-loading { text-align: center; padding: 3rem; color: var(--md-on-surface-variant); }
+.article-footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--md-outline-variant); display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+.article-source-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: 9999px; background: var(--md-surface-container-high); color: var(--md-on-surface); border: 1px solid var(--md-outline-variant); transition: box-shadow 200ms; }
+.article-source-link:hover { box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 1px 3px 1px rgba(0,0,0,0.15); }
+
+#list-section, .blog-hero { transition: opacity 250ms ease; }
+@media (max-width: 639px) { .post-card { padding: 1.25rem; } .post-card h2 { font-size: 1.2rem; } .post-card-excerpt { font-size: 0.875rem; } .blog-hero { padding-top: 6rem; padding-bottom: 2rem; } .blog-hero h1 { font-size: 1.9rem; } .blog-hero p { font-size: 1rem; } .article-view h1 { font-size: 1.5rem; } .article-body { font-size: 0.9375rem; } .article-body h1 { font-size: 1.3rem; } .article-body h2 { font-size: 1.1rem; } .navbar-inner { height: 3.5rem; } .container-narrow { padding: 0 0.75rem; } .back-link { font-size: 0.8125rem; padding: 0.4rem 0.75rem; } }
 
 .footer { padding: 3rem 0; border-top: 1px solid var(--md-outline-variant); }
 .footer-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 1rem; }
@@ -171,9 +211,19 @@ section { padding: 5rem 0; scroll-margin-top: 4rem; }
   </div>
 </section>
 
-<section style="padding-top:0">
+<section style="padding-top:0" id="list-section">
   <div class="container-narrow">
     <div class="post-list" id="post-list"></div>
+  </div>
+</section>
+
+<section class="article-view" id="article-section">
+  <div class="container-narrow">
+    <button class="back-link" id="back-to-list"></button>
+    <div class="article-meta" id="article-meta"></div>
+    <h1 id="article-title"></h1>
+    <div class="article-body" id="article-body"></div>
+    <div class="article-footer" id="article-footer"></div>
   </div>
 </section>
 
@@ -211,6 +261,7 @@ var dict = {
     langLabel: "EN",
     blog: { title: "技术博客", subtitle: "开发过程中踩过的坑、学到的东西，和一些随想。" },
     backLink: "← 返回首页",
+    backToList: "返回列表",
     readMore: "继续阅读",
     minRead: "分钟阅读",
     topBadge: "置顶",
@@ -229,6 +280,7 @@ var dict = {
     langLabel: "中",
     blog: { title: "Blog", subtitle: "Problems I've hit, things I've learned, and some thoughts along the way." },
     backLink: "← Back to home",
+    backToList: "Back to list",
     readMore: "Read more",
     minRead: "min read",
     topBadge: "Pinned",
@@ -292,16 +344,14 @@ function renderPosts(posts, t) {
     postList.innerHTML = '<p style="color:var(--md-on-surface-variant);text-align:center;padding:2rem">' + t.loading + "</p>";
     return;
   }
-  posts.forEach(function(post) {
+  posts.forEach(function(post, idx) {
     var d = new Date(post.date);
     var dateStr = d.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", { year: "numeric", month: "short", day: "numeric" });
     var topBadge = post.top ? '<span class="post-card-tag" style="background:var(--md-primary-container);color:var(--md-on-primary-container)">📌 ' + t.topBadge + "</span> " : "";
-    var giteeBadge = post.giteeUrl ? ' <a href="' + post.giteeUrl + '" target="_blank" rel="noopener noreferrer" class="post-card-tag" style="background:var(--md-tertiary-container);color:var(--md-on-tertiary-container);text-decoration:none">' + t.giteeLabel + "</a>" : "";
-    var card = document.createElement("a");
-    card.href = post.githubUrl || post.url || "#";
-    card.target = "_blank";
-    card.rel = "noopener noreferrer";
+    var giteeBadge = post.giteeUrl ? ' <span class="post-card-tag" style="background:var(--md-tertiary-container);color:var(--md-on-tertiary-container)">' + t.giteeLabel + "</span>" : "";
+    var card = document.createElement("div");
     card.className = "post-card";
+    card.style.cursor = "pointer";
     var excerpt = post.excerpt || "";
     var metaExtra = post.read ? '<span class="sep"></span><span>' + post.read + " " + t.minRead + "</span>" : "";
     var tagsHtml = "";
@@ -310,14 +360,181 @@ function renderPosts(posts, t) {
     }
     card.innerHTML =
       '<div class="post-card-meta"><time>' + dateStr + "</time>" + metaExtra + "</div>" +
-      "<h2>" + (topBadge ? "" : "") + post.title + "</h2>" +
+      "<h2>" + post.title + "</h2>" +
       (excerpt ? '<p class="post-card-excerpt">' + excerpt + "</p>" : "") +
       '<div class="post-card-footer">' +
         '<div class="post-card-tags">' + topBadge + tagsHtml + giteeBadge + "</div>" +
         '<span class="post-card-read">' + t.readMore + " " + ICONS.arrow + "</span>" +
       "</div>";
+    card.addEventListener("click", function() { openArticle(posts, idx, t, card); });
     postList.appendChild(card);
   });
+}
+
+function githubBlobToRaw(url) {
+  return url.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/");
+}
+
+function renderMarkdown(md) {
+  var html = md;
+  html = html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  var codeBlocks = [];
+  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, function(m, lang, code) {
+    var placeholder = "\x00CODEBLOCK" + codeBlocks.length + "\x00";
+    codeBlocks.push('<pre><code>' + code + "</code></pre>");
+    return placeholder;
+  });
+  var inlineCodes = [];
+  html = html.replace(/`([^`]+)`/g, function(m, code) {
+    var placeholder = "\x00INLINECODE" + inlineCodes.length + "\x00";
+    inlineCodes.push("<code>" + code + "</code>");
+    return placeholder;
+  });
+  html = html.replace(/^### (.+)$/gm, "<h3>$1</h3>");
+  html = html.replace(/^## (.+)$/gm, "<h2>$1</h2>");
+  html = html.replace(/^# (.+)$/gm, "<h1>$1</h1>");
+  html = html.replace(/^\> (.+)$/gm, "<blockquote>$1</blockquote>");
+  html = html.replace(/^---$/gm, "<hr>");
+  var lines = html.split("\n");
+  var result = [];
+  var inList = null;
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i];
+    var ulMatch = line.match(/^[-*] (.+)$/);
+    var olMatch = line.match(/^\d+\. (.+)$/);
+    if (ulMatch) {
+      if (inList !== "ul") { if (inList) result.push("</" + inList + ">"); result.push("<ul>"); inList = "ul"; }
+      result.push("<li>" + ulMatch[1] + "</li>");
+    } else if (olMatch) {
+      if (inList !== "ol") { if (inList) result.push("</" + inList + ">"); result.push("<ol>"); inList = "ol"; }
+      result.push("<li>" + olMatch[1] + "</li>");
+    } else {
+      if (inList) { result.push("</" + inList + ">"); inList = null; }
+      if (line.trim() === "" || /^\x00/.test(line) || /^<(h[1-6]|blockquote|hr|pre|table)/.test(line.trim())) {
+        result.push(line);
+      } else {
+        result.push("<p>" + line + "</p>");
+      }
+    }
+  }
+  if (inList) result.push("</" + inList + ">");
+  html = result.join("\n");
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  html = html.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+  html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2">');
+  for (var i = 0; i < codeBlocks.length; i++) {
+    html = html.replace("\x00CODEBLOCK" + i + "\x00", codeBlocks[i]);
+  }
+  for (var i = 0; i < inlineCodes.length; i++) {
+    html = html.replace("\x00INLINECODE" + i + "\x00", inlineCodes[i]);
+  }
+  return html;
+}
+
+var _lastCardRect = null;
+
+function openArticle(posts, idx, t, cardEl) {
+  var post = posts[idx];
+  var rect = cardEl ? cardEl.getBoundingClientRect() : null;
+  _lastCardRect = rect;
+  var morph = null;
+
+  if (rect) {
+    morph = document.createElement("div");
+    morph.style.cssText = "position:fixed;left:" + rect.left + "px;top:" + rect.top + "px;width:" + rect.width + "px;height:" + rect.height + "px;background:var(--md-surface-container-low);border:1px solid var(--md-outline-variant);border-radius:24px;z-index:100;pointer-events:none;overflow:hidden;transition:all 450ms cubic-bezier(0.2,0,0,1)";
+    document.body.appendChild(morph);
+    document.getElementById("list-section").style.opacity = "0";
+    document.querySelector(".blog-hero").style.opacity = "0";
+    void morph.offsetHeight;
+    morph.style.left = "0px";
+    morph.style.top = "0px";
+    morph.style.width = "100vw";
+    morph.style.height = "100vh";
+    morph.style.borderRadius = "0px";
+    morph.style.borderColor = "transparent";
+  }
+
+  setTimeout(function() {
+    document.getElementById("list-section").style.display = "none";
+    document.querySelector(".blog-hero").style.display = "none";
+    document.getElementById("list-section").style.opacity = "";
+    document.querySelector(".blog-hero").style.opacity = "";
+
+    var artSection = document.getElementById("article-section");
+    artSection.classList.add("active");
+
+    var d = new Date(post.date);
+    var dateStr = d.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", { year: "numeric", month: "short", day: "numeric" });
+    document.getElementById("article-meta").innerHTML = "<time>" + dateStr + "</time>";
+    document.getElementById("article-title").textContent = post.title;
+    document.getElementById("back-to-list").innerHTML = ICONS.arrow + " " + t.backToList;
+    document.getElementById("article-body").innerHTML = '<div class="article-loading">' + t.loading + "</div>";
+    document.getElementById("article-footer").innerHTML = "";
+
+    if (morph) morph.remove();
+    window.scrollTo(0, 0);
+
+    var sourceUrl = post.githubUrl || post.url;
+    var rawUrl = sourceUrl ? githubBlobToRaw(sourceUrl) : null;
+
+    if (!rawUrl || typeof fetch === "undefined") {
+      showArticleContent(post.excerpt || t.loadFail, post, t, sourceUrl, post.giteeUrl);
+      return;
+    }
+    fetch(rawUrl)
+      .then(function(r) { return r.ok ? r.text() : Promise.reject(); })
+      .then(function(text) {
+        showArticleContent(renderMarkdown(text), post, t, sourceUrl, post.giteeUrl);
+      })
+      .catch(function() {
+        showArticleContent(post.excerpt || t.loadFail, post, t, sourceUrl, post.giteeUrl);
+      });
+  }, morph ? 450 : 0);
+}
+
+function showArticleContent(html, post, t, sourceUrl, giteeUrl) {
+  document.getElementById("article-body").innerHTML = html;
+  var footerHtml = "";
+  if (sourceUrl) {
+    footerHtml += '<a href="' + sourceUrl + '" target="_blank" rel="noopener noreferrer" class="article-source-link">' + ICONS.githubSm + " GitHub</a>";
+  }
+  if (giteeUrl) {
+    footerHtml += '<a href="' + giteeUrl + '" target="_blank" rel="noopener noreferrer" class="article-source-link">Gitee</a>';
+  }
+  document.getElementById("article-footer").innerHTML = footerHtml;
+}
+
+function closeArticle() {
+  var artSection = document.getElementById("article-section");
+  var morph = null;
+
+  if (_lastCardRect) {
+    morph = document.createElement("div");
+    morph.style.cssText = "position:fixed;left:0;top:0;width:100vw;height:100vh;background:var(--md-surface-container-low);border:1px solid transparent;border-radius:0;z-index:100;pointer-events:none;overflow:hidden;transition:all 400ms cubic-bezier(0.2,0,0,1)";
+    document.body.appendChild(morph);
+  }
+
+  artSection.classList.remove("active");
+  artSection.classList.add("closing");
+
+  setTimeout(function() {
+    artSection.classList.remove("closing");
+    document.getElementById("list-section").style.display = "";
+    document.querySelector(".blog-hero").style.display = "";
+    window.scrollTo(0, 0);
+
+    if (morph && _lastCardRect) {
+      void morph.offsetHeight;
+      morph.style.left = _lastCardRect.left + "px";
+      morph.style.top = _lastCardRect.top + "px";
+      morph.style.width = _lastCardRect.width + "px";
+      morph.style.height = _lastCardRect.height + "px";
+      morph.style.borderRadius = "24px";
+      morph.style.borderColor = "var(--md-outline-variant)";
+      setTimeout(function() { morph.remove(); }, 400);
+    }
+  }, 200);
 }
 
 function render() {
@@ -391,6 +608,7 @@ try {
   document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
   document.getElementById("lang-btn").addEventListener("click", toggleLang);
   document.getElementById("theme-btn").addEventListener("click", toggleTheme);
+  document.getElementById("back-to-list").addEventListener("click", closeArticle);
   render();
 } catch(e) {
   document.body.innerHTML = '<pre style="padding:2rem;color:#c00;font-family:monospace;white-space:pre-wrap">' + (e && e.stack ? e.stack : String(e)) + '</pre>';
