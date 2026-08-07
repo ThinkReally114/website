@@ -250,40 +250,52 @@ var CONFIG = {
   urlPattern: "{date}-{seq}",
   dateDigits: 8,
   seqDigits: 2,
-  urlSeparator: "-"
+  urlSeparator: "-",
+  hashPrefix: "/"
 };
 
-function buildUrlSuffix(dateStr, seq) {
-  return dateStr + CONFIG.urlSeparator + seq.toString().padStart(CONFIG.seqDigits, "0");
+function formatDateForUrl(rawDate) {
+  if (CONFIG.dateDigits <= 0) return "";
+  if (rawDate.length >= CONFIG.dateDigits) return rawDate.substring(0, CONFIG.dateDigits);
+  return (rawDate + "19700101").substring(0, CONFIG.dateDigits);
 }
 
-function parseUrlSuffix(suffix) {
-  var parts = suffix.split(CONFIG.urlSeparator);
-  if (parts.length < 2) return null;
-  var dateStr = parts[0];
-  var seqStr = parts[parts.length - 1];
-  if (dateStr.length !== CONFIG.dateDigits || !/^\d+$/.test(dateStr)) return null;
-  if (!/^\d+$/.test(seqStr)) return null;
-  return { date: dateStr, seq: parseInt(seqStr, 10) };
+function buildPostUrlSuffix(post) {
+  var seq = (post.urlSeq || 1).toString().padStart(CONFIG.seqDigits, "0");
+  return CONFIG.urlPattern.replace(/\{date\}/g, formatDateForUrl(post.rawDate)).replace(/\{seq\}/g, seq);
 }
 
-function findPostByUrl(posts, suffix) {
-  var parsed = parseUrlSuffix(suffix);
-  if (!parsed) return -1;
+function parseUrlSuffixToPost(suffix, posts) {
+  var pattern = CONFIG.urlPattern
+    .replace(/\{date\}/g, CONFIG.dateDigits > 0 ? "(\\d{" + CONFIG.dateDigits + "})" : "()")
+    .replace(/\{seq\}/g, "(\\d+)");
+  var re = new RegExp("^" + pattern + "$");
+  var m = suffix.match(re);
+  if (!m) return -1;
+  var dateStr = m[1] || "";
+  var seqNum = parseInt(m[2], 10);
   for (var i = 0; i < posts.length; i++) {
-    var p = posts[i];
-    if (p.rawDate === parsed.date && (i + 1) === parsed.seq) return i;
+    if (posts[i].urlSeq === seqNum && formatDateForUrl(posts[i].rawDate) === dateStr) return i;
   }
   return -1;
 }
 
 function getArticleSuffixFromUrl() {
+  var hash = window.location.hash;
+  if (hash && hash.indexOf("#" + CONFIG.hashPrefix) === 0) return hash.substring(1 + CONFIG.hashPrefix.length);
   var path = window.location.pathname;
   var match = path.match(/blog\.html\/(.+)$/);
   if (match) return match[1];
-  var hash = window.location.hash;
-  if (hash && hash.indexOf("#/") === 0) return hash.substring(2);
   return null;
+}
+
+function computeUrlSeqs(posts) {
+  var dateCount = {};
+  for (var i = 0; i < posts.length; i++) {
+    var d = posts[i].rawDate || "19700101";
+    dateCount[d] = (dateCount[d] || 0) + 1;
+    posts[i].urlSeq = dateCount[d];
+  }
 }
 
 var _s = { g: function(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }, s: function(k, v) { try { localStorage.setItem(k, v); } catch(e) {} } };
@@ -503,6 +515,7 @@ function renderMarkdown(md) {
 }
 
 var _lastCardRect = null;
+var _cachedPosts = null;
 
 function openArticle(posts, idx, t, cardEl) {
   var post = posts[idx];
@@ -535,13 +548,9 @@ function openArticle(posts, idx, t, cardEl) {
     }
   });
 
-  var now = new Date();
-  var dateStr = now.getFullYear().toString() +
-    (now.getMonth() + 1).toString().padStart(2, "0") +
-    now.getDate().toString().padStart(2, "0");
-  var urlSuffix = buildUrlSuffix(dateStr, idx + 1);
+  var urlSuffix = buildPostUrlSuffix(post);
   if (typeof history !== "undefined" && history.pushState) {
-    history.pushState({ article: idx }, "", "blog.html/" + urlSuffix);
+    history.pushState({ article: idx }, "", "blog.html#" + CONFIG.hashPrefix + urlSuffix);
   }
 
   var sourceUrl = post.githubUrl || post.url;
@@ -611,10 +620,10 @@ function render() {
   document.getElementById("blog-title").textContent = t.blog.title;
   document.getElementById("blog-subtitle").textContent = t.blog.subtitle;
 
-  fetchViews("total", function(count) {
+  incrementViews("total", function(count) {
     var viewsEl = document.getElementById("blog-views");
-    if (viewsEl && count !== null) {
-      viewsEl.innerHTML = ICONS.eye + " " + count.toLocaleString() + " " + (lang === "zh" ? "次浏览" : "views");
+    if (viewsEl) {
+      viewsEl.innerHTML = ICONS.eye + " " + (count !== null ? count.toLocaleString() : "0") + " " + (lang === "zh" ? "次浏览" : "views");
     }
   });
 
@@ -623,18 +632,21 @@ function render() {
   document.getElementById("footer-copy").innerHTML = "© " + new Date().getFullYear() + " ThinkReally114. " + t.footer.rights + ".";
   document.getElementById("theme-btn").innerHTML = dark ? ICONS.sun : ICONS.moon;
 
-  function tryAutoOpen(posts) {
+  function tryAutoOpen() {
+    if (!_cachedPosts) return;
     var suffix = getArticleSuffixFromUrl();
     if (!suffix) return;
-    var idx = findPostByUrl(posts, suffix);
+    var idx = parseUrlSuffixToPost(suffix, _cachedPosts);
     if (idx >= 0) {
-      setTimeout(function() { openArticle(posts, idx, t, null); }, 100);
+      setTimeout(function() { openArticle(_cachedPosts, idx, t, null); }, 100);
     }
   }
 
   if (typeof fetch === "undefined") {
+    computeUrlSeqs(FALLBACK_POSTS);
+    _cachedPosts = FALLBACK_POSTS;
     renderPosts(FALLBACK_POSTS, t);
-    tryAutoOpen(FALLBACK_POSTS);
+    tryAutoOpen();
     return;
   }
   fetch(BLOG_GUIDING_URL)
@@ -642,16 +654,22 @@ function render() {
     .then(function(text) {
       var posts = parseGuiding(text);
       if (posts.length > 0) {
+        computeUrlSeqs(posts);
+        _cachedPosts = posts;
         renderPosts(posts, t);
-        tryAutoOpen(posts);
+        tryAutoOpen();
       } else {
+        computeUrlSeqs(FALLBACK_POSTS);
+        _cachedPosts = FALLBACK_POSTS;
         renderPosts(FALLBACK_POSTS, t);
-        tryAutoOpen(FALLBACK_POSTS);
+        tryAutoOpen();
       }
     })
     .catch(function() {
+      computeUrlSeqs(FALLBACK_POSTS);
+      _cachedPosts = FALLBACK_POSTS;
       renderPosts(FALLBACK_POSTS, t);
-      tryAutoOpen(FALLBACK_POSTS);
+      tryAutoOpen();
     });
 }
 
