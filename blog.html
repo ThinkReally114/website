@@ -246,6 +246,46 @@ body.article-open .navbar-back { opacity: 1; transform: translateX(0); pointer-e
 <script>
 var GITHUB_URL = "https://github.com/ThinkReally114";
 
+var CONFIG = {
+  urlPattern: "{date}-{seq}",
+  dateDigits: 8,
+  seqDigits: 2,
+  urlSeparator: "-"
+};
+
+function buildUrlSuffix(dateStr, seq) {
+  return dateStr + CONFIG.urlSeparator + seq.toString().padStart(CONFIG.seqDigits, "0");
+}
+
+function parseUrlSuffix(suffix) {
+  var parts = suffix.split(CONFIG.urlSeparator);
+  if (parts.length < 2) return null;
+  var dateStr = parts[0];
+  var seqStr = parts[parts.length - 1];
+  if (dateStr.length !== CONFIG.dateDigits || !/^\d+$/.test(dateStr)) return null;
+  if (!/^\d+$/.test(seqStr)) return null;
+  return { date: dateStr, seq: parseInt(seqStr, 10) };
+}
+
+function findPostByUrl(posts, suffix) {
+  var parsed = parseUrlSuffix(suffix);
+  if (!parsed) return -1;
+  for (var i = 0; i < posts.length; i++) {
+    var p = posts[i];
+    if (p.rawDate === parsed.date && (i + 1) === parsed.seq) return i;
+  }
+  return -1;
+}
+
+function getArticleSuffixFromUrl() {
+  var path = window.location.pathname;
+  var match = path.match(/blog\.html\/(.+)$/);
+  if (match) return match[1];
+  var hash = window.location.hash;
+  if (hash && hash.indexOf("#/") === 0) return hash.substring(2);
+  return null;
+}
+
 var _s = { g: function(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }, s: function(k, v) { try { localStorage.setItem(k, v); } catch(e) {} } };
 var lang = _s.g("lang") || "zh";
 var dark = (function() { var v = _s.g("theme"); if (v) return v === "dark"; try { return window.matchMedia("(prefers-color-scheme: dark)").matches; } catch(e) { return false; } })();
@@ -496,12 +536,12 @@ function openArticle(posts, idx, t, cardEl) {
   });
 
   var now = new Date();
-  var dateSuffix = now.getFullYear().toString() +
+  var dateStr = now.getFullYear().toString() +
     (now.getMonth() + 1).toString().padStart(2, "0") +
-    now.getDate().toString().padStart(2, "0") + "-" +
-    (idx + 1).toString().padStart(2, "0");
+    now.getDate().toString().padStart(2, "0");
+  var urlSuffix = buildUrlSuffix(dateStr, idx + 1);
   if (typeof history !== "undefined" && history.pushState) {
-    history.pushState({ article: idx }, "", "blog.html/" + dateSuffix);
+    history.pushState({ article: idx }, "", "blog.html/" + urlSuffix);
   }
 
   var sourceUrl = post.githubUrl || post.url;
@@ -583,8 +623,18 @@ function render() {
   document.getElementById("footer-copy").innerHTML = "© " + new Date().getFullYear() + " ThinkReally114. " + t.footer.rights + ".";
   document.getElementById("theme-btn").innerHTML = dark ? ICONS.sun : ICONS.moon;
 
+  function tryAutoOpen(posts) {
+    var suffix = getArticleSuffixFromUrl();
+    if (!suffix) return;
+    var idx = findPostByUrl(posts, suffix);
+    if (idx >= 0) {
+      setTimeout(function() { openArticle(posts, idx, t, null); }, 100);
+    }
+  }
+
   if (typeof fetch === "undefined") {
     renderPosts(FALLBACK_POSTS, t);
+    tryAutoOpen(FALLBACK_POSTS);
     return;
   }
   fetch(BLOG_GUIDING_URL)
@@ -593,12 +643,15 @@ function render() {
       var posts = parseGuiding(text);
       if (posts.length > 0) {
         renderPosts(posts, t);
+        tryAutoOpen(posts);
       } else {
         renderPosts(FALLBACK_POSTS, t);
+        tryAutoOpen(FALLBACK_POSTS);
       }
     })
     .catch(function() {
       renderPosts(FALLBACK_POSTS, t);
+      tryAutoOpen(FALLBACK_POSTS);
     });
 }
 
