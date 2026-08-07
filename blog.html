@@ -313,29 +313,52 @@ var ICONS = {
 
 var WORKER_URL = "https://blog-counter.2507164880.workers.dev";
 var VIEWS_CACHE = {};
+var _viewsRetryTimer = null;
 
 function incrementViews(key, callback) {
   if (typeof fetch === "undefined") { callback(null); return; }
+  var localKey = "v_" + key;
+  var localCount = 0;
+  try { localCount = parseInt(localStorage.getItem(localKey) || '0', 10); } catch(e) {}
+  localCount++;
+  try { localStorage.setItem(localKey, localCount); } catch(e) {}
+  VIEWS_CACHE[key] = localCount;
+  callback(localCount);
   fetch(WORKER_URL + "?key=" + encodeURIComponent(key) + "&action=up")
     .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
     .then(function(d) {
-      try { localStorage.setItem("v_" + key, d.count); } catch(e) {}
+      try { localStorage.setItem(localKey, d.count); } catch(e) {}
       VIEWS_CACHE[key] = d.count;
-      callback(d.count);
     })
-    .catch(function() { callback(null); });
+    .catch(function() {
+      if (_viewsRetryTimer) clearTimeout(_viewsRetryTimer);
+      _viewsRetryTimer = setTimeout(function() {
+        fetch(WORKER_URL + "?key=" + encodeURIComponent(key) + "&action=up")
+          .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+          .then(function(d) {
+            try { localStorage.setItem(localKey, d.count); } catch(e) {}
+            VIEWS_CACHE[key] = d.count;
+          })
+          .catch(function() {});
+      }, 5000);
+    });
 }
 
 function fetchViews(key, callback) {
   if (typeof fetch === "undefined") { callback(null); return; }
+  var localKey = "v_" + key;
+  try {
+    var localCount = parseInt(localStorage.getItem(localKey) || '0', 10);
+    if (localCount > 0) { callback(localCount); return; }
+  } catch(e) {}
   fetch(WORKER_URL + "?key=" + encodeURIComponent(key) + "&action=get")
     .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
     .then(function(d) {
-      try { localStorage.setItem("v_" + key, d.count); } catch(e) {}
+      try { localStorage.setItem(localKey, d.count); } catch(e) {}
       VIEWS_CACHE[key] = d.count;
       callback(d.count);
     })
-    .catch(function() { callback(null); });
+    .catch(function() { callback(0); });
 }
 
 function getCachedViews(key) {
@@ -585,8 +608,8 @@ function openArticle(posts, idx, t, cardEl) {
 
   incrementViews(articleKey, function(count) {
     var viewsEl = document.getElementById("article-views");
-    if (viewsEl) {
-      viewsEl.innerHTML = ICONS.eye + " " + (count !== null ? count.toLocaleString() : "0");
+    if (viewsEl && count !== null) {
+      viewsEl.innerHTML = ICONS.eye + " " + count.toLocaleString();
     }
   });
 
