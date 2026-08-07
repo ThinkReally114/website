@@ -218,7 +218,6 @@ body.article-open .navbar-back { opacity: 1; transform: translateX(0); pointer-e
     <div><span class="index" id="blog-index"></span><span class="line"></span></div>
     <h1 id="blog-title"></h1>
     <p id="blog-subtitle"></p>
-    <div class="blog-views" id="blog-views"></div>
   </div>
 </section>
 
@@ -345,13 +344,14 @@ var dict = {
     ],
     langLabel: "EN",
     blog: { title: "技术博客", subtitle: "开发过程中踩过的坑、学到的东西，和一些随想。" },
-    backLink: "\u2190 返回首页",
+    backLink: "← 返回首页",
     backToList: "返回列表",
     readMore: "继续阅读",
     minRead: "分钟阅读",
     topBadge: "置顶",
     loading: "加载中...",
     loadFail: "无法加载博客列表，显示本地缓存",
+    loadFailArticle: "文章加载失败",
     giteeLabel: "Gitee 加速",
     footer: { built: "用 M3 设计语言手工搭建", rights: "保留所有权利" }
   },
@@ -362,24 +362,25 @@ var dict = {
       { href: "blog.html", label: "Blog" },
       { href: "index.html#contact", label: "Contact" }
     ],
-    langLabel: "\u4e2d",
+    langLabel: "中",
     blog: { title: "Blog", subtitle: "Problems I've hit, things I've learned, and some thoughts along the way." },
-    backLink: "\u2190 Back to home",
+    backLink: "← Back to home",
     backToList: "Back to list",
     readMore: "Read more",
     minRead: "min read",
     topBadge: "Pinned",
     loading: "Loading...",
     loadFail: "Failed to load blog list, showing local cache",
+    loadFailArticle: "Failed to load article",
     giteeLabel: "Gitee mirror",
     footer: { built: "Hand-built with Material 3", rights: "All rights reserved" }
   }
 };
 
 var FALLBACK_POSTS = [
-  { title: "\u7528\u7eaf HTML/CSS/JS \u505a\u4e00\u4e2a\u6a21\u62df\u624b\u673a\u7cfb\u7edf\u2014\u2014Source-UI \u5f00\u53d1\u7b14\u8bb0", excerpt: "Source-UI \u662f\u6211\u7528\u7eaf\u524d\u7aef\u6280\u672f\u505a\u7684\u4e00\u4e2a\u6a21\u62df\u79fb\u52a8\u64cd\u4f5c\u7cfb\u7edf\u754c\u9762\u3002\u6ca1\u6709\u7528\u4efb\u4f55\u6846\u67b6\uff0c\u53ea\u6709 HTML5\u3001CSS3 \u548c\u539f\u751f JavaScript\u3002\u8fd9\u7bc7\u6587\u7ae0\u8bb0\u5f55\u4e86\u4ece\u6700\u521d\u7684\u60f3\u6cd5\u5230 65 \u6b21\u63d0\u4ea4\u7684\u8fc7\u7a0b\u4e2d\uff0c\u6211\u5b66\u5230\u7684 CSS Variables\u3001Flexbox/Grid \u5e03\u5c40\u6280\u5de7\uff0c\u4ee5\u53ca\u600e\u4e48\u7528\u7eaf CSS \u5b9e\u73b0\u6d41\u7545\u7684\u754c\u9762\u52a8\u753b\u3002", date: "2026-05-09", tags: ["HTML", "CSS", "\u524d\u7aef"], read: 8, url: "https://github.com/ThinkReally114/Source-UI" },
-  { title: "PVPUtils \u8de8\u5e73\u53f0\u4fee\u590d\uff1aSkia \u539f\u751f\u5e93\u7684\u81ea\u52a8\u52a0\u8f7d\u65b9\u6848", excerpt: "PVPUtils \u53ea\u6253\u5305\u4e86 Windows \u7684 Skia .dll\uff0c\u5728 Linux \u548c macOS \u4e0a\u76f4\u63a5\u5d29\u3002\u6211\u5199\u4e86 pvputils-fix \u8fd9\u4e2a Fabric \u6a21\u7ec4\uff0c\u542f\u52a8\u65f6\u68c0\u6d4b\u5e73\u53f0\u3001\u4ece Maven \u4e0b\u8f7d\u5bf9\u5e94\u7684\u539f\u751f\u5e93\u3001SHA-256 \u6821\u9a8c\u3001Mixin \u9884\u52a0\u8f7d\u3002\u672c\u6587\u8be6\u7ec6\u62c6\u89e3\u4e86\u6574\u4e2a\u6280\u672f\u65b9\u6848\uff0c\u5305\u62ec AtomicBoolean \u7ebf\u7a0b\u5b89\u5168\u548c\u591a\u955c\u50cf\u56de\u9000\u8bbe\u8ba1\u3002", date: "2026-07-18", tags: ["Java", "Minecraft", "Fabric"], read: 12, url: "https://github.com/ThinkReally114/pvputils-fix" },
-  { title: "Fabric \u6a21\u7ec4\u5f00\u53d1\u5165\u95e8\uff1a\u4ece Mixin \u5230 Gradle \u6784\u5efa", excerpt: "\u5f00\u59cb\u505a Minecraft \u6a21\u7ec4\u65f6\u8e29\u4e86\u4e0d\u5c11\u5751\u2014\u2014Mixin \u6ce8\u5165\u7684\u65f6\u673a\u3001Fabric Loader \u7684\u7248\u672c\u517c\u5bb9\u3001Gradle \u6784\u5efa\u914d\u7f6e\u3002\u8fd9\u7bc7\u6587\u7ae0\u662f\u6211\u6574\u7406\u7684 Fabric \u6a21\u7ec4\u5f00\u53d1\u5165\u95e8\u6307\u5357\uff0c\u6db5\u76d6\u73af\u5883\u642d\u5efa\u3001Mixin \u57fa\u7840\u3001Gradle \u6784\u5efa\u548c GitHub Actions CI \u914d\u7f6e\u3002", date: "2026-06-15", tags: ["Java", "Minecraft", "\u6559\u7a0b"], read: 15, url: "https://github.com/ThinkReally114/pvputils-fix" }
+  { title: "用纯 HTML/CSS/JS 做一个模拟手机系统——Source-UI 开发笔记", excerpt: "Source-UI 是我用纯前端技术做的一个模拟移动操作系统界面。没有用任何框架，只有 HTML5、CSS3 和原生 JavaScript。这篇文章记录了从最初的想法到 65 次提交的过程中，我学到的 CSS Variables、Flexbox/Grid 布局技巧，以及怎么用纯 CSS 实现流畅的界面动画。", date: "2026-05-09", tags: ["HTML", "CSS", "前端"], read: 8, url: "https://github.com/ThinkReally114/Source-UI" },
+  { title: "PVPUtils 跨平台修复：Skia 原生库的自动加载方案", excerpt: "PVPUtils 只打包了 Windows 的 Skia .dll，在 Linux 和 macOS 上直接崩。我写了 pvputils-fix 这个 Fabric 模组，启动时检测平台、从 Maven 下载对应的原生库、SHA-256 校验、Mixin 预加载。本文详细拆解了整个技术方案，包括 AtomicBoolean 线程安全和多镜像回退设计。", date: "2026-07-18", tags: ["Java", "Minecraft", "Fabric"], read: 12, url: "https://github.com/ThinkReally114/pvputils-fix" },
+  { title: "Fabric 模组开发入门：从 Mixin 到 Gradle 构建", excerpt: "开始做 Minecraft 模组时踩了不少坑——Mixin 注入的时机、Fabric Loader 的版本兼容、Gradle 构建配置。这篇文章是我整理的 Fabric 模组开发入门指南，涵盖环境搭建、Mixin 基础、Gradle 构建和 GitHub Actions CI 配置。", date: "2026-06-15", tags: ["Java", "Minecraft", "教程"], read: 15, url: "https://github.com/ThinkReally114/pvputils-fix" }
 ];
 
 var BLOG_GUIDING_URL = "https://raw.githubusercontent.com/ThinkReally114/website/main/does/blog/BLOGTITLEGUIDING";
@@ -432,7 +433,7 @@ function renderPosts(posts, t) {
   posts.forEach(function(post, idx) {
     var d = new Date(post.date);
     var dateStr = d.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", { year: "numeric", month: "short", day: "numeric" });
-    var topBadge = post.top ? '<span class="post-card-tag" style="background:var(--md-primary-container);color:var(--md-on-primary-container)">\ud83d\udccc ' + t.topBadge + "</span> " : "";
+    var topBadge = post.top ? '<span class="post-card-tag" style="background:var(--md-primary-container);color:var(--md-on-primary-container)">📌 ' + t.topBadge + "</span> " : "";
     var giteeBadge = post.giteeUrl ? ' <span class="post-card-tag" style="background:var(--md-tertiary-container);color:var(--md-on-tertiary-container)">' + t.giteeLabel + "</span>" : "";
     var card = document.createElement("div");
     card.className = "post-card";
@@ -530,7 +531,7 @@ function openArticle(posts, idx, t, cardEl) {
   var d = new Date(post.date);
   var dateStr = d.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", { year: "numeric", month: "short", day: "numeric" });
   var articleKey = "post-" + idx;
-  document.getElementById("article-meta").innerHTML = "<time>" + dateStr + "</time><span class=\"article-views\" id=\"article-views\">" + ICONS.eye + " 0</span>";
+  document.getElementById("article-meta").innerHTML = "<time>" + dateStr + "</time><span class=\"article-views\" id=\"article-views\">" + ICONS.eye + " " + t.loading + "</span>";
   document.getElementById("article-title").textContent = post.title;
   document.getElementById("navbar-back").innerHTML = ICONS.arrow + " " + t.backToList;
   document.getElementById("article-body").innerHTML = '<div class="article-loading">' + t.loading + "</div>";
@@ -562,7 +563,7 @@ function openArticle(posts, idx, t, cardEl) {
   var rawUrl = sourceUrl ? githubBlobToRaw(sourceUrl) : null;
 
   if (!rawUrl || typeof fetch === "undefined") {
-    showArticleContent(post.excerpt || t.loadFail, post, t, sourceUrl, post.giteeUrl);
+    showArticleContent('<p style="color:var(--md-on-surface-variant);text-align:center;padding:2rem">' + t.loadFailArticle + "</p>", post, t, sourceUrl, post.giteeUrl);
     return;
   }
   fetch(rawUrl)
@@ -571,7 +572,7 @@ function openArticle(posts, idx, t, cardEl) {
       showArticleContent(renderMarkdown(text), post, t, sourceUrl, post.giteeUrl);
     })
     .catch(function() {
-      showArticleContent(post.excerpt || t.loadFail, post, t, sourceUrl, post.giteeUrl);
+      showArticleContent('<p style="color:var(--md-on-surface-variant);text-align:center;padding:2rem">' + t.loadFailArticle + "</p>", post, t, sourceUrl, post.giteeUrl);
     });
 }
 
@@ -625,16 +626,9 @@ function render() {
   document.getElementById("blog-title").textContent = t.blog.title;
   document.getElementById("blog-subtitle").textContent = t.blog.subtitle;
 
-  incrementViews("total", function(count) {
-    var viewsEl = document.getElementById("blog-views");
-    if (viewsEl) {
-      viewsEl.innerHTML = ICONS.eye + " " + (count !== null ? count.toLocaleString() : "0") + " " + (lang === "zh" ? "\u6b21\u6d4f\u89c8" : "views");
-    }
-  });
-
   document.getElementById("post-list").innerHTML = '<p style="color:var(--md-on-surface-variant);text-align:center;padding:2rem">' + t.loading + "</p>";
 
-  document.getElementById("footer-copy").innerHTML = "\u00a9 " + new Date().getFullYear() + " ThinkReally114. " + t.footer.rights + ".";
+  document.getElementById("footer-copy").innerHTML = "© " + new Date().getFullYear() + " ThinkReally114. " + t.footer.rights + ".";
   document.getElementById("theme-btn").innerHTML = dark ? ICONS.sun : ICONS.moon;
 
   function tryAutoOpen() {
