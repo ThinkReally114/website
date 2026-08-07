@@ -134,6 +134,10 @@ section { padding: 5rem 0; scroll-margin-top: 4rem; }
 .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--md-on-surface-variant); font-size: 0.875rem; font-weight: 500; padding: 0.5rem 1rem; border-radius: 9999px; transition: color 150ms, background 150ms; cursor: pointer; background: none; border: none; font-family: inherit; }
 .back-link:hover { color: var(--md-on-surface); background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
 .back-link svg { transform: rotate(180deg); }
+.blog-views { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; font-family: "JetBrains Mono", monospace; font-size: 0.875rem; color: var(--md-on-surface-variant); }
+.blog-views svg { color: var(--md-primary); }
+.article-views { display: inline-flex; align-items: center; gap: 0.375rem; font-family: "JetBrains Mono", monospace; font-size: 0.75rem; color: var(--md-on-surface-variant); }
+.article-views svg { color: var(--md-primary); }
 
 .article-view { display: none; }
 .article-view.active { display: block; animation: pageIn 320ms cubic-bezier(0.2,0,0,1) both; }
@@ -211,10 +215,10 @@ body.article-open .navbar-back { opacity: 1; transform: translateX(0); pointer-e
 
 <section class="blog-hero" id="top">
   <div class="container-narrow">
-    <a href="index.html" class="back-link" id="back-link"></a>
-    <div style="margin-top:1.5rem"><span class="index" id="blog-index"></span><span class="line"></span></div>
+    <div><span class="index" id="blog-index"></span><span class="line"></span></div>
     <h1 id="blog-title"></h1>
     <p id="blog-subtitle"></p>
+    <div class="blog-views" id="blog-views"></div>
   </div>
 </section>
 
@@ -253,8 +257,27 @@ var ICONS = {
   arrow: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
   sun: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8l1.8-1.8M18 6l1.8-1.8"/></svg>',
   moon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
-  globe: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M3 12h17M12 2.5c2.5 2.5 3.5 6 3.5 9.5s-1 7-3.5 9.5c-2.5-2.5-3.5-6-3.5-9.5s1-7 3.5-9.5z"/></svg>'
+  globe: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M3 12h17M12 2.5c2.5 2.5 3.5 6 3.5 9.5s-1 7-3.5 9.5c-2.5-2.5-3.5-6-3.5-9.5s1-7 3.5-9.5z"/></svg>',
+  eye: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>'
 };
+
+var COUNTER_API = "https://api.counterapi.dev/v1/thinkreally114-website";
+
+function fetchViews(key, callback) {
+  if (typeof fetch === "undefined") { callback(null); return; }
+  fetch(COUNTER_API + "/" + key)
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) { callback(d && d.count ? d.count : null); })
+    .catch(function() { callback(null); });
+}
+
+function incrementViews(key, callback) {
+  if (typeof fetch === "undefined") { callback(null); return; }
+  fetch(COUNTER_API + "/" + key + "/up")
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) { callback(d && d.count ? d.count : null); })
+    .catch(function() { callback(null); });
+}
 
 var dict = {
   zh: {
@@ -449,7 +472,8 @@ function openArticle(posts, idx, t, cardEl) {
 
   var d = new Date(post.date);
   var dateStr = d.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", { year: "numeric", month: "short", day: "numeric" });
-  document.getElementById("article-meta").innerHTML = "<time>" + dateStr + "</time>";
+  var articleKey = "post-" + idx;
+  document.getElementById("article-meta").innerHTML = "<time>" + dateStr + "</time><span class=\"article-views\" id=\"article-views\">" + ICONS.eye + " ...</span>";
   document.getElementById("article-title").textContent = post.title;
   document.getElementById("back-to-list").innerHTML = ICONS.arrow + " " + t.backToList;
   document.getElementById("navbar-back").innerHTML = ICONS.arrow + " " + t.backToList;
@@ -465,6 +489,13 @@ function openArticle(posts, idx, t, cardEl) {
     document.getElementById("list-section").style.display = "none";
     document.querySelector(".blog-hero").style.display = "none";
   }, 200);
+
+  incrementViews(articleKey, function(count) {
+    var viewsEl = document.getElementById("article-views");
+    if (viewsEl && count !== null) {
+      viewsEl.innerHTML = ICONS.eye + " " + count.toLocaleString();
+    }
+  });
 
   var sourceUrl = post.githubUrl || post.url;
   var rawUrl = sourceUrl ? githubBlobToRaw(sourceUrl) : null;
@@ -525,10 +556,16 @@ function render() {
   document.getElementById("nav-github").href = GITHUB_URL;
   document.getElementById("nav-github").innerHTML = ICONS.github;
 
-  document.getElementById("back-link").innerHTML = ICONS.arrow + " " + t.backLink.replace("← ", "");
   document.getElementById("blog-index").textContent = "Blog";
   document.getElementById("blog-title").textContent = t.blog.title;
   document.getElementById("blog-subtitle").textContent = t.blog.subtitle;
+
+  fetchViews("total", function(count) {
+    var viewsEl = document.getElementById("blog-views");
+    if (viewsEl && count !== null) {
+      viewsEl.innerHTML = ICONS.eye + " " + count.toLocaleString() + " " + (lang === "zh" ? "次浏览" : "views");
+    }
+  });
 
   document.getElementById("post-list").innerHTML = '<p style="color:var(--md-on-surface-variant);text-align:center;padding:2rem">' + t.loading + "</p>";
 
