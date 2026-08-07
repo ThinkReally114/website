@@ -191,51 +191,9 @@ body.article-open .navbar-back { opacity: 1; transform: translateX(0); pointer-e
 @media (min-width: 640px) { .footer-inner { flex-direction: row; padding: 0 2rem; } }
 .footer-copy { font-size: 0.875rem; color: var(--md-on-surface-variant); }
 
-/* 评论组件 */
+/* Giscus 评论 */
 .comments-section { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--md-outline-variant); }
-.comments-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
-.comments-header h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.25rem; color: var(--md-on-surface); }
-.comments-header span { font-family: "JetBrains Mono", monospace; font-size: 0.875rem; color: var(--md-on-surface-variant); }
-.comment-login { text-align: center; padding: 2rem; background: var(--md-surface-container-low); border-radius: 24px; border: 1px solid var(--md-outline-variant); margin-bottom: 1.5rem; }
-.comment-login p { font-size: 0.9375rem; color: var(--md-on-surface-variant); margin-bottom: 1rem; }
-.comment-login-btns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
-.comment-login-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.25rem; border-radius: 9999px; border: none; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: filter 150ms, transform 150ms; }
-.comment-login-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-.comment-login-btn.github { background: #24292e; color: #fff; }
-.comment-login-btn.gitee { background: #c71d23; color: #fff; }
-.comment-form { margin-bottom: 1.5rem; }
-.comment-form-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
-.comment-form-avatar { width: 2.25rem; height: 2.25rem; border-radius: 9999px; background: var(--md-surface-container-high); overflow: hidden; flex-shrink: 0; }
-.comment-form-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.comment-form-user { font-size: 0.875rem; font-weight: 600; color: var(--md-on-surface); }
-.comment-form-provider { font-size: 0.75rem; color: var(--md-on-surface-variant); font-family: "JetBrains Mono", monospace; }
-.comment-form textarea { width: 100%; min-height: 5rem; padding: 0.875rem 1rem; border-radius: 16px; border: 1px solid var(--md-outline-variant); background: var(--md-surface-container-low); color: var(--md-on-surface); font-family: "Instrument Sans", system-ui, sans-serif; font-size: 0.9375rem; line-height: 1.5; resize: vertical; transition: border-color 150ms; }
-.comment-form textarea:focus { border-color: var(--md-primary); outline: none; }
-.comment-form-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.75rem; }
-.comment-btn { padding: 0.5rem 1.25rem; border-radius: 9999px; border: none; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: filter 150ms, transform 150ms; }
-.comment-btn:hover { transform: translateY(-1px); }
-.comment-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-.comment-btn-primary { background: var(--md-primary); color: var(--md-on-primary); }
-.comment-btn-secondary { background: var(--md-surface-container-high); color: var(--md-on-surface-variant); }
-.comment-item { padding: 1rem 0; border-bottom: 1px solid var(--md-outline-variant); }
-.comment-item:last-child { border-bottom: none; }
-.comment-item-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
-.comment-item-avatar { width: 2rem; height: 2rem; border-radius: 9999px; overflow: hidden; flex-shrink: 0; }
-.comment-item-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.comment-item-author { font-size: 0.875rem; font-weight: 600; color: var(--md-on-surface); }
-.comment-item-time { font-size: 0.75rem; color: var(--md-on-surface-variant); font-family: "JetBrains Mono", monospace; }
-.comment-item-provider { font-size: 0.625rem; padding: 0.125rem 0.375rem; border-radius: 4px; background: var(--md-surface-container-high); color: var(--md-on-surface-variant); font-family: "JetBrains Mono", monospace; }
-.comment-item-content { font-size: 0.9375rem; line-height: 1.625; color: var(--md-on-surface); margin-bottom: 0.5rem; word-break: break-word; }
-.comment-item-actions { display: flex; gap: 0.75rem; }
-.comment-item-reply-btn { font-size: 0.8125rem; color: var(--md-primary); font-weight: 500; cursor: pointer; background: none; border: none; font-family: inherit; padding: 0.25rem 0; }
-.comment-item-reply-btn:hover { text-decoration: underline; }
-.comment-reply-form { margin: 0.75rem 0 0.75rem 2.5rem; }
-.comment-reply-input { width: 100%; min-height: 3rem; padding: 0.625rem 0.875rem; border-radius: 12px; border: 1px solid var(--md-outline-variant); background: var(--md-surface-container-low); color: var(--md-on-surface); font-family: "Instrument Sans", system-ui, sans-serif; font-size: 0.875rem; line-height: 1.5; resize: vertical; transition: border-color 150ms; }
-.comment-reply-input:focus { border-color: var(--md-primary); outline: none; }
-.comment-reply-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; }
-.comment-replies { margin-left: 2rem; border-left: 2px solid var(--md-outline-variant); padding-left: 1rem; }
-.comment-loading { text-align: center; padding: 2rem; color: var(--md-on-surface-variant); font-size: 0.9375rem; }
-.comment-error { text-align: center; padding: 2rem; color: var(--md-on-surface-variant); font-size: 0.9375rem; }
+.comments-section .giscus { margin-top: 1rem; }
 
 ::selection { background: var(--md-primary-container); color: var(--md-on-primary-container); }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -280,11 +238,7 @@ body.article-open .navbar-back { opacity: 1; transform: translateX(0); pointer-e
     <div class="article-body" id="article-body"></div>
     <div class="article-footer" id="article-footer"></div>
     <div class="comments-section" id="comments-section">
-      <div class="comments-header">
-        <h3>💬 <span id="comments-title">评论</span></h3>
-        <span id="comments-count"></span>
-      </div>
-      <div id="comments-area"></div>
+      <div id="giscus-container"></div>
     </div>
   </div>
 </section>
@@ -365,23 +319,7 @@ var ICONS = {
 };
 
 var WORKER_URL = "https://blog-counter.2507164880.workers.dev";
-var COMMENT_TOKEN = null;
-var COMMENT_USER = null;
 
-(function() {
-  var params = new URLSearchParams(window.location.search);
-  var t = params.get('token');
-  if (t) {
-    COMMENT_TOKEN = t;
-    try { sessionStorage.setItem('comment_token', t); } catch(e) {}
-    if (typeof history !== 'undefined' && history.replaceState) {
-      var cleanUrl = window.location.pathname + window.location.hash;
-      history.replaceState({}, '', cleanUrl);
-    }
-  } else {
-    try { COMMENT_TOKEN = sessionStorage.getItem('comment_token'); } catch(e) {}
-  }
-})();
 var VIEWS_CACHE = {};
 var _viewsRetryTimer = null;
 
@@ -713,7 +651,7 @@ function showArticleContent(html, post, t, sourceUrl, giteeUrl) {
     footerHtml += '<a href="' + giteeUrl + '" target="_blank" rel="noopener noreferrer" class="article-source-link">Gitee</a>';
   }
   document.getElementById("article-footer").innerHTML = footerHtml;
-  initCommentSection(_articleKey);
+  initGiscus(_articleKey);
 }
 
 function loadArticleContent(url, post, t, sourceUrl, useMirror) {
@@ -751,270 +689,42 @@ function closeArticle() {
     document.querySelector(".blog-hero").style.display = "";
     document.getElementById("list-section").classList.remove("fading");
     window.scrollTo(0, 0);
-    COMMENT_KEY = null;
     _articleKey = null;
   }, 220);
 }
 
-var COMMENT_KEY = null;
+function initGiscus(key) {
+  var container = document.getElementById("giscus-container");
+  if (!container) return;
+  container.innerHTML = "";
 
-function escapeHtml(text) {
-  var d = document.createElement("div");
-  d.appendChild(document.createTextNode(text));
-  return d.innerHTML;
+  var script = document.createElement("script");
+  script.src = "https://giscus.app/client.js";
+  script.setAttribute("data-repo", "ThinkReally114/website");
+  script.setAttribute("data-repo-id", "R_kgDOTdaBzA");
+  script.setAttribute("data-category", "Announcements");
+  script.setAttribute("data-category-id", "DIC_kwDOTdaBzM4DC5dB");
+  script.setAttribute("data-mapping", "specific");
+  script.setAttribute("data-term", key || "blog");
+  script.setAttribute("data-strict", "1");
+  script.setAttribute("data-reactions-enabled", "1");
+  script.setAttribute("data-emit-metadata", "0");
+  script.setAttribute("data-input-position", "top");
+  script.setAttribute("data-theme", document.body.classList.contains("dark") ? "dark_dimmed" : "light");
+  script.setAttribute("data-lang", lang === "zh" ? "zh-CN" : "en");
+  script.setAttribute("data-loading", "lazy");
+  script.crossOrigin = "anonymous";
+  script.async = true;
+  container.appendChild(script);
 }
 
-function formatTime(ts) {
-  var d = new Date(ts);
-  var diff = (Date.now() - ts) / 1000;
-  if (diff < 60) return "just now";
-  if (diff < 3600) return Math.floor(diff / 60) + "m ago";
-  if (diff < 86400) return Math.floor(diff / 3600) + "h ago";
-  return d.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", { month: "short", day: "numeric" });
-}
-
-function commentApi(method, key, body) {
-  var url = WORKER_URL + "/api/comments?key=" + encodeURIComponent(key);
-  var opts = { method: method, headers: { "Content-Type": "application/json" } };
-  if (COMMENT_TOKEN) opts.headers["Authorization"] = "Bearer " + COMMENT_TOKEN;
-  if (body) opts.body = JSON.stringify(body);
-  return fetchWithTimeout(url, 8000, opts).then(function(r) { return r.ok ? r.json() : Promise.reject(); });
-}
-
-function fetchWithTimeout(url, timeout, opts) {
-  timeout = timeout || 10000;
-  return new Promise(function(resolve, reject) {
-    var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
-    var timer = setTimeout(function() {
-      if (controller) controller.abort();
-      reject(new Error("timeout"));
-    }, timeout);
-    var fetchOpts = controller ? Object.assign({ signal: controller.signal }, opts || {}) : (opts || {});
-    fetch(url, fetchOpts).then(function(r) {
-      clearTimeout(timer);
-      resolve(r);
-    }, function(e) {
-      clearTimeout(timer);
-      reject(e);
-    });
-  });
-}
-
-function checkLogin() {
-  if (!COMMENT_TOKEN) { COMMENT_USER = null; renderLoginState(); return; }
-  fetchWithTimeout(WORKER_URL + "/api/me", 5000, { headers: { "Authorization": "Bearer " + COMMENT_TOKEN } })
-    .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
-    .then(function(d) {
-      if (d.user) {
-        COMMENT_USER = d.user;
-        renderLoginState();
-      } else {
-        COMMENT_TOKEN = null;
-        COMMENT_USER = null;
-        try { sessionStorage.removeItem("comment_token"); } catch(e) {}
-        renderLoginState();
-      }
-    })
-    .catch(function() { COMMENT_TOKEN = null; COMMENT_USER = null; renderLoginState(); });
-}
-
-function loginWith(provider) {
-  var redirect = window.location.href.split("?")[0].split("#")[0];
-  window.location.href = WORKER_URL + "/auth/" + provider + "/login?redirect=" + encodeURIComponent(redirect);
-}
-
-function logout() {
-  COMMENT_TOKEN = null;
-  COMMENT_USER = null;
-  try { sessionStorage.removeItem("comment_token"); } catch(e) {}
-  renderLoginState();
-}
-
-function loadComments() {
-  var area = document.getElementById("comments-area");
-  if (!area || !COMMENT_KEY) return;
-  area.innerHTML = '<div class="comment-loading">Loading...</div>';
-  commentApi("GET", COMMENT_KEY)
-    .then(function(d) {
-      renderComments(d.comments || []);
-    })
-    .catch(function() {
-      area.innerHTML = '<div class="comment-error">Failed to load comments</div>';
-    });
-}
-
-function renderComments(comments) {
-  var area = document.getElementById("comments-area");
-  if (!area) return;
-  var count = countAllComments(comments);
-  var countEl = document.getElementById("comments-count");
-  if (countEl) countEl.textContent = "(" + count + ")";
-  if (comments.length === 0) {
-    area.innerHTML = '<div class="comment-loading">No comments yet</div>';
-    return;
-  }
-  var html = "";
-  for (var i = 0; i < comments.length; i++) {
-    html += renderCommentItem(comments[i], 0);
-  }
-  area.innerHTML = html;
-}
-
-function renderCommentItem(comment, depth) {
-  var avatar = comment.avatar || "";
-  var author = escapeHtml(comment.author || "Anonymous");
-  var time = formatTime(comment.createdAt || Date.now());
-  var content = escapeHtml(comment.content || "");
-  var provider = comment.provider || "github";
-  var providerLabel = provider === "gitee" ? "Gitee" : "GitHub";
-  var repliesHtml = "";
-  if (comment.replies && comment.replies.length > 0) {
-    repliesHtml = '<div class="comment-replies">';
-    for (var i = 0; i < comment.replies.length; i++) {
-      repliesHtml += renderCommentItem(comment.replies[i], depth + 1);
-    }
-    repliesHtml += "</div>";
-  }
-  var replyBtn = COMMENT_USER ? '<button class="comment-item-reply-btn" onclick="showReplyForm(\'' + comment.id + '\')">Reply</button>' : "";
-  return '<div class="comment-item" data-comment-id="' + comment.id + '">' +
-    '<div class="comment-item-header">' +
-      '<div class="comment-item-avatar">' + (avatar ? '<img src="' + avatar + '&s=40" alt="" loading="lazy">' : "") + '</div>' +
-      '<span class="comment-item-author">' + author + '</span>' +
-      '<span class="comment-item-provider">' + providerLabel + '</span>' +
-      '<span class="comment-item-time">' + time + '</span>' +
-    '</div>' +
-    '<div class="comment-item-content">' + content + '</div>' +
-    '<div class="comment-item-actions">' + replyBtn + '</div>' +
-    repliesHtml +
-  '</div>';
-}
-
-function countAllComments(comments) {
-  var count = 0;
-  for (var i = 0; i < comments.length; i++) {
-    count++;
-    if (comments[i].replies) count += countAllComments(comments[i].replies);
-  }
-  return count;
-}
-
-function renderLoginState() {
-  var area = document.getElementById("comments-area");
-  if (!area) return;
-  var loginSection = document.getElementById("comment-login-section");
-  var formSection = document.getElementById("comment-form-section");
-  if (COMMENT_USER) {
-    if (loginSection) loginSection.style.display = "none";
-    if (formSection) {
-      formSection.style.display = "block";
-      var avatarEl = document.getElementById("comment-form-avatar-img");
-      if (avatarEl && COMMENT_USER.avatar) avatarEl.src = COMMENT_USER.avatar + "&s=40";
-      var nameEl = document.getElementById("comment-form-name");
-      if (nameEl) nameEl.textContent = COMMENT_USER.username;
-      var providerEl = document.getElementById("comment-form-provider");
-      if (providerEl) providerEl.textContent = COMMENT_USER.provider === "gitee" ? "Gitee" : "GitHub";
-    }
-  } else {
-    if (loginSection) loginSection.style.display = "block";
-    if (formSection) formSection.style.display = "none";
-  }
-}
-
-function submitComment() {
-  var textarea = document.getElementById("comment-input");
-  if (!textarea || !COMMENT_KEY || !COMMENT_USER) return;
-  var content = textarea.value.trim();
-  if (!content) return;
-  var btn = document.getElementById("comment-submit-btn");
-  if (btn) btn.disabled = true;
-  commentApi("POST", COMMENT_KEY, { content: content })
-    .then(function() {
-      textarea.value = "";
-      if (btn) btn.disabled = false;
-      loadComments();
-    })
-    .catch(function() {
-      if (btn) btn.disabled = false;
-    });
-}
-
-var REPLYING_TO = null;
-
-function showReplyForm(parentId) {
-  if (REPLYING_TO === parentId) { cancelReply(); return; }
-  cancelReply();
-  REPLYING_TO = parentId;
-  var form = document.createElement("div");
-  form.className = "comment-reply-form";
-  form.id = "reply-form-" + parentId;
-  form.innerHTML =
-    '<textarea class="comment-reply-input" id="reply-input-' + parentId + '" placeholder="Write a reply..." rows="2"></textarea>' +
-    '<div class="comment-reply-actions">' +
-      '<button class="comment-btn comment-btn-secondary" onclick="cancelReply()">Cancel</button>' +
-      '<button class="comment-btn comment-btn-primary" onclick="submitReply(\'' + parentId + '\')">Reply</button>' +
-    '</div>';
-  var target = document.querySelector('[data-comment-id="' + parentId + '"]');
-  if (target) {
-    target.appendChild(form);
-  } else {
-    var items = document.querySelectorAll(".comment-item");
-    for (var i = 0; i < items.length; i++) {
-      if (items[i].querySelector(".comment-item-reply-btn") && items[i].contains(document.activeElement)) {
-        items[i].appendChild(form);
-        break;
-      }
-    }
-  }
-  var input = document.getElementById("reply-input-" + parentId);
-  if (input) input.focus();
-}
-
-function cancelReply() {
-  REPLYING_TO = null;
-  var forms = document.querySelectorAll(".comment-reply-form");
-  for (var i = 0; i < forms.length; i++) forms[i].remove();
-}
-
-function submitReply(parentId) {
-  var input = document.getElementById("reply-input-" + parentId);
-  if (!input || !COMMENT_KEY || !COMMENT_USER) return;
-  var content = input.value.trim();
-  if (!content) return;
-  commentApi("POST", COMMENT_KEY, { content: content, parentId: parentId })
-    .then(function() {
-      cancelReply();
-      loadComments();
-    })
-    .catch(function() {});
-}
-
-function initCommentSection(key) {
-  COMMENT_KEY = key;
-  var area = document.getElementById("comments-area");
-  if (!area) return;
-  var loginHtml =
-    '<div class="comment-login" id="comment-login-section">' +
-      '<p>Sign in to leave a comment</p>' +
-      '<div class="comment-login-btns">' +
-        '<button class="comment-login-btn github" onclick="loginWith(\'github\')">' + ICONS.githubSm + ' GitHub</button>' +
-        '<button class="comment-login-btn gitee" onclick="loginWith(\'gitee\')">Gitee</button>' +
-      '</div>' +
-    '</div>';
-  var formHtml =
-    '<div class="comment-form" id="comment-form-section" style="display:none">' +
-      '<div class="comment-form-header">' +
-        '<div class="comment-form-avatar"><img id="comment-form-avatar-img" src="" alt="" loading="lazy"></div>' +
-        '<div><div class="comment-form-user" id="comment-form-name"></div><div class="comment-form-provider" id="comment-form-provider"></div></div>' +
-        '<button class="comment-btn comment-btn-secondary" style="margin-left:auto" onclick="logout()">Logout</button>' +
-      '</div>' +
-      '<textarea id="comment-input" placeholder="Write a comment..." rows="3"></textarea>' +
-      '<div class="comment-form-actions">' +
-        '<button class="comment-btn comment-btn-primary" id="comment-submit-btn" onclick="submitComment()">Submit</button>' +
-      '</div>' +
-    '</div>';
-  area.innerHTML = loginHtml + formHtml + '<div class="comment-loading">Loading comments...</div>';
-  checkLogin();
-  loadComments();
+function updateGiscusTheme() {
+  var iframe = document.querySelector(".giscus-frame");
+  if (!iframe) return;
+  iframe.contentWindow.postMessage(
+    { giscus: { setConfig: { theme: document.body.classList.contains("dark") ? "dark_dimmed" : "light" } } },
+    "https://giscus.app"
+  );
 }
 
 function loadBlogList(t, tryAutoOpen, useMirror) {
@@ -1097,6 +807,7 @@ function applyTheme() {
   document.documentElement.classList.toggle("dark", dark);
   _s.s("theme", dark ? "dark" : "light");
   document.getElementById("theme-btn").innerHTML = dark ? ICONS.sun : ICONS.moon;
+  updateGiscusTheme();
 }
 
 function toggleLang() {
