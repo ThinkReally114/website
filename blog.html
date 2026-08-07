@@ -311,65 +311,22 @@ var ICONS = {
   eye: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>'
 };
 
-var JB_URL = "https://jsonblob.com/api/jsonBlob/019fdd20-82a2-7624-aca3-b8774ee092de";
-var VIEWS_STORAGE_KEY = "thinkreally_blog_views";
-
-function getLocalViews() {
-  try {
-    var raw = localStorage.getItem(VIEWS_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch(e) {
-    return {};
-  }
-}
-
-function setLocalViews(data) {
-  try {
-    localStorage.setItem(VIEWS_STORAGE_KEY, JSON.stringify(data));
-  } catch(e) {}
-}
+var WORKER_URL = "https://blog-counter.2507164880.workers.dev";
 
 function incrementViews(key, callback) {
   if (typeof fetch === "undefined") { callback(null); return; }
-  var localData = getLocalViews();
-  localData[key] = (localData[key] || 0) + 1;
-  setLocalViews(localData);
-  var localCount = localData[key];
-  fetch(JB_URL)
-    .then(function(r) { return r.json().catch(function() { return {}; }); })
-    .then(function(remoteData) {
-      var remoteCount = (remoteData[key] || 0) + 1;
-      var finalCount = Math.max(localCount, remoteCount);
-      remoteData[key] = finalCount;
-      localData[key] = finalCount;
-      setLocalViews(localData);
-      return fetch(JB_URL, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(remoteData) })
-        .then(function() { callback(finalCount); })
-        .catch(function() { callback(finalCount); });
-    })
-    .catch(function() { callback(localCount); });
+  fetch(WORKER_URL + "?key=" + encodeURIComponent(key) + "&action=up")
+    .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+    .then(function(d) { callback(d.count); })
+    .catch(function() { callback(null); });
 }
 
 function fetchViews(key, callback) {
-  if (typeof fetch === "undefined") {
-    var local = getLocalViews();
-    callback(local && local[key] != null ? local[key] : 0);
-    return;
-  }
-  var localData = getLocalViews();
-  var localCount = localData[key] || 0;
-  fetch(JB_URL)
-    .then(function(r) { return r.ok ? r.json() : null; })
-    .then(function(d) {
-      var remoteCount = d && d[key] != null ? d[key] : 0;
-      var finalCount = Math.max(localCount, remoteCount);
-      if (localCount < remoteCount) {
-        localData[key] = remoteCount;
-        setLocalViews(localData);
-      }
-      callback(finalCount || 0);
-    })
-    .catch(function() { callback(localCount || 0); });
+  if (typeof fetch === "undefined") { callback(null); return; }
+  fetch(WORKER_URL + "?key=" + encodeURIComponent(key) + "&action=get")
+    .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+    .then(function(d) { callback(d.count); })
+    .catch(function() { callback(null); });
 }
 
 var dict = {
