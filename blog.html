@@ -315,6 +315,17 @@ var WORKER_URL = "https://blog-counter.2507164880.workers.dev";
 var VIEWS_CACHE = {};
 var _viewsRetryTimer = null;
 
+function syncFromWorker(key, localKey, localCount) {
+  return fetch(WORKER_URL + "?key=" + encodeURIComponent(key) + "&action=up")
+    .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+    .then(function(d) {
+      if (d.count >= localCount) {
+        try { localStorage.setItem(localKey, d.count); } catch(e) {}
+        VIEWS_CACHE[key] = d.count;
+      }
+    });
+}
+
 function incrementViews(key, callback) {
   if (typeof fetch === "undefined") { callback(null); return; }
   var localKey = "v_" + key;
@@ -324,41 +335,32 @@ function incrementViews(key, callback) {
   try { localStorage.setItem(localKey, localCount); } catch(e) {}
   VIEWS_CACHE[key] = localCount;
   callback(localCount);
-  fetch(WORKER_URL + "?key=" + encodeURIComponent(key) + "&action=up")
-    .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
-    .then(function(d) {
-      try { localStorage.setItem(localKey, d.count); } catch(e) {}
-      VIEWS_CACHE[key] = d.count;
-    })
-    .catch(function() {
-      if (_viewsRetryTimer) clearTimeout(_viewsRetryTimer);
-      _viewsRetryTimer = setTimeout(function() {
-        fetch(WORKER_URL + "?key=" + encodeURIComponent(key) + "&action=up")
-          .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
-          .then(function(d) {
-            try { localStorage.setItem(localKey, d.count); } catch(e) {}
-            VIEWS_CACHE[key] = d.count;
-          })
-          .catch(function() {});
-      }, 5000);
-    });
+  syncFromWorker(key, localKey, localCount).catch(function() {
+    if (_viewsRetryTimer) clearTimeout(_viewsRetryTimer);
+    _viewsRetryTimer = setTimeout(function() {
+      syncFromWorker(key, localKey, localCount).catch(function() {});
+    }, 5000);
+  });
 }
 
 function fetchViews(key, callback) {
   if (typeof fetch === "undefined") { callback(null); return; }
   var localKey = "v_" + key;
-  try {
-    var localCount = parseInt(localStorage.getItem(localKey) || '0', 10);
-    if (localCount > 0) { callback(localCount); return; }
-  } catch(e) {}
+  var localCount = 0;
+  try { localCount = parseInt(localStorage.getItem(localKey) || '0', 10); } catch(e) {}
+  if (localCount > 0) { callback(localCount); return; }
   fetch(WORKER_URL + "?key=" + encodeURIComponent(key) + "&action=get")
     .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
     .then(function(d) {
-      try { localStorage.setItem(localKey, d.count); } catch(e) {}
-      VIEWS_CACHE[key] = d.count;
-      callback(d.count);
+      if (d.count > 0) {
+        try { localStorage.setItem(localKey, d.count); } catch(e) {}
+        VIEWS_CACHE[key] = d.count;
+        callback(d.count);
+      } else {
+        callback(localCount);
+      }
     })
-    .catch(function() { callback(0); });
+    .catch(function() { callback(localCount); });
 }
 
 function getCachedViews(key) {
