@@ -710,7 +710,7 @@ function initGiscus(key) {
   script.setAttribute("data-reactions-enabled", "1");
   script.setAttribute("data-emit-metadata", "0");
   script.setAttribute("data-input-position", "top");
-  script.setAttribute("data-theme", document.body.classList.contains("dark") ? "dark_dimmed" : "light");
+  script.setAttribute("data-theme", document.documentElement.classList.contains("dark") ? "dark_dimmed" : "light");
   script.setAttribute("data-lang", lang === "zh" ? "zh-CN" : "en");
   script.setAttribute("data-loading", "lazy");
   script.crossOrigin = "anonymous";
@@ -722,7 +722,7 @@ function updateGiscusTheme() {
   var iframe = document.querySelector(".giscus-frame");
   if (!iframe) return;
   iframe.contentWindow.postMessage(
-    { giscus: { setConfig: { theme: document.body.classList.contains("dark") ? "dark_dimmed" : "light" } } },
+    { giscus: { setConfig: { theme: document.documentElement.classList.contains("dark") ? "dark_dimmed" : "light" } } },
     "https://giscus.app"
   );
 }
