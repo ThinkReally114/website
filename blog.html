@@ -827,7 +827,9 @@ window.addEventListener("scroll", function() {
 }, { passive: true });
 
 window.addEventListener("popstate", function(e) {
-  if (document.body.classList.contains("article-open")) {
+  if (!document.body.classList.contains("article-open")) return;
+  var suffix = getArticleSuffixFromUrl();
+  if (!suffix) {
     closeArticle();
   }
 });
