@@ -312,12 +312,17 @@ var ICONS = {
 };
 
 var WORKER_URL = "https://blog-counter.2507164880.workers.dev";
+var VIEWS_CACHE = {};
 
 function incrementViews(key, callback) {
   if (typeof fetch === "undefined") { callback(null); return; }
   fetch(WORKER_URL + "?key=" + encodeURIComponent(key) + "&action=up")
     .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
-    .then(function(d) { callback(d.count); })
+    .then(function(d) {
+      try { localStorage.setItem("v_" + key, d.count); } catch(e) {}
+      VIEWS_CACHE[key] = d.count;
+      callback(d.count);
+    })
     .catch(function() { callback(null); });
 }
 
@@ -325,8 +330,21 @@ function fetchViews(key, callback) {
   if (typeof fetch === "undefined") { callback(null); return; }
   fetch(WORKER_URL + "?key=" + encodeURIComponent(key) + "&action=get")
     .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
-    .then(function(d) { callback(d.count); })
+    .then(function(d) {
+      try { localStorage.setItem("v_" + key, d.count); } catch(e) {}
+      VIEWS_CACHE[key] = d.count;
+      callback(d.count);
+    })
     .catch(function() { callback(null); });
+}
+
+function getCachedViews(key) {
+  if (VIEWS_CACHE[key] != null) return VIEWS_CACHE[key];
+  try {
+    var v = localStorage.getItem("v_" + key);
+    if (v != null) { VIEWS_CACHE[key] = parseInt(v, 10); return VIEWS_CACHE[key]; }
+  } catch(e) {}
+  return null;
 }
 
 var dict = {
@@ -548,7 +566,8 @@ function openArticle(posts, idx, t, cardEl) {
   var d = new Date(post.date);
   var dateStr = d.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", { year: "numeric", month: "short", day: "numeric" });
   var articleKey = "post-" + idx;
-  document.getElementById("article-meta").innerHTML = "<time>" + dateStr + "</time><span class=\"article-views\" id=\"article-views\">" + ICONS.eye + " " + t.loading + "</span>";
+  var cachedCount = getCachedViews(articleKey);
+  document.getElementById("article-meta").innerHTML = "<time>" + dateStr + "</time><span class=\"article-views\" id=\"article-views\">" + ICONS.eye + " " + (cachedCount != null ? cachedCount.toLocaleString() : t.loading) + "</span>";
   document.getElementById("article-title").textContent = post.title;
   document.getElementById("navbar-back").innerHTML = ICONS.arrow + " " + t.backToList;
   document.getElementById("article-body").innerHTML = '<div class="article-loading">' + t.loading + "</div>";
