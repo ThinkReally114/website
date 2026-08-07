@@ -352,6 +352,7 @@ var dict = {
     loading: "加载中...",
     loadFail: "无法加载博客列表，显示本地缓存",
     loadFailArticle: "文章加载失败",
+    mirrorPrompt: "GitHub 加载超时，是否使用开源中国镜像源？",
     giteeLabel: "Gitee 加速",
     footer: { built: "用 M3 设计语言手工搭建", rights: "保留所有权利" }
   },
@@ -372,6 +373,7 @@ var dict = {
     loading: "Loading...",
     loadFail: "Failed to load blog list, showing local cache",
     loadFailArticle: "Failed to load article",
+    mirrorPrompt: "GitHub timed out. Use open source mirror?",
     giteeLabel: "Gitee mirror",
     footer: { built: "Hand-built with Material 3", rights: "All rights reserved" }
   }
@@ -384,6 +386,26 @@ var FALLBACK_POSTS = [
 ];
 
 var BLOG_GUIDING_URL = "https://raw.githubusercontent.com/ThinkReally114/website/main/does/blog/BLOGTITLEGUIDING";
+var BLOG_GUIDING_URL_GITEE = "https://gitee.com/thinkreally123/website/raw/main/does/blog/BLOGTITLEGUIDING";
+
+function fetchWithTimeout(url, timeout) {
+  timeout = timeout || 10000;
+  return new Promise(function(resolve, reject) {
+    var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+    var timer = setTimeout(function() {
+      if (controller) controller.abort();
+      reject(new Error("timeout"));
+    }, timeout);
+    var opts = controller ? { signal: controller.signal } : {};
+    fetch(url, opts).then(function(r) {
+      clearTimeout(timer);
+      resolve(r);
+    }, function(e) {
+      clearTimeout(timer);
+      reject(e);
+    });
+  });
+}
 
 function parseGuiding(text) {
   var blocks = text.split(/\n\s*\n/);
@@ -566,14 +588,7 @@ function openArticle(posts, idx, t, cardEl) {
     showArticleContent('<p style="color:var(--md-on-surface-variant);text-align:center;padding:2rem">' + t.loadFailArticle + "</p>", post, t, sourceUrl, post.giteeUrl);
     return;
   }
-  fetch(rawUrl)
-    .then(function(r) { return r.ok ? r.text() : Promise.reject(); })
-    .then(function(text) {
-      showArticleContent(renderMarkdown(text), post, t, sourceUrl, post.giteeUrl);
-    })
-    .catch(function() {
-      showArticleContent('<p style="color:var(--md-on-surface-variant);text-align:center;padding:2rem">' + t.loadFailArticle + "</p>", post, t, sourceUrl, post.giteeUrl);
-    });
+  loadArticleContent(rawUrl, post, t, sourceUrl, 0);
 }
 
 function showArticleContent(html, post, t, sourceUrl, giteeUrl) {
@@ -586,6 +601,24 @@ function showArticleContent(html, post, t, sourceUrl, giteeUrl) {
     footerHtml += '<a href="' + giteeUrl + '" target="_blank" rel="noopener noreferrer" class="article-source-link">Gitee</a>';
   }
   document.getElementById("article-footer").innerHTML = footerHtml;
+}
+
+function loadArticleContent(url, post, t, sourceUrl, useMirror) {
+  var fetchUrl = (useMirror && post.giteeUrl) ? post.giteeUrl : url;
+  fetchWithTimeout(fetchUrl, 10000)
+    .then(function(r) { return r.ok ? r.text() : Promise.reject(); })
+    .then(function(text) {
+      showArticleContent(renderMarkdown(text), post, t, sourceUrl, post.giteeUrl);
+    })
+    .catch(function(e) {
+      if (e.message === "timeout" && !useMirror && post.giteeUrl) {
+        if (confirm(t.mirrorPrompt)) {
+          loadArticleContent(url, post, t, sourceUrl, 1);
+          return;
+        }
+      }
+      showArticleContent('<p style="color:var(--md-on-surface-variant);text-align:center;padding:2rem">' + t.loadFailArticle + "</p>", post, t, sourceUrl, post.giteeUrl);
+    });
 }
 
 function closeArticle() {
@@ -606,6 +639,39 @@ function closeArticle() {
     document.getElementById("list-section").classList.remove("fading");
     window.scrollTo(0, 0);
   }, 220);
+}
+
+function loadBlogList(t, tryAutoOpen, useMirror) {
+  var url = useMirror ? BLOG_GUIDING_URL_GITEE : BLOG_GUIDING_URL;
+  fetchWithTimeout(url, 10000)
+    .then(function(r) { return r.ok ? r.text() : Promise.reject(); })
+    .then(function(text) {
+      var posts = parseGuiding(text);
+      if (posts.length > 0) {
+        computeUrlSeqs(posts);
+        _cachedPosts = posts;
+        renderPosts(posts, t);
+        tryAutoOpen();
+      } else {
+        fallbackToLocal(t, tryAutoOpen);
+      }
+    })
+    .catch(function(e) {
+      if (e.message === "timeout" && !useMirror) {
+        if (confirm(t.mirrorPrompt)) {
+          loadBlogList(t, tryAutoOpen, 1);
+          return;
+        }
+      }
+      fallbackToLocal(t, tryAutoOpen);
+    });
+}
+
+function fallbackToLocal(t, tryAutoOpen) {
+  computeUrlSeqs(FALLBACK_POSTS);
+  _cachedPosts = FALLBACK_POSTS;
+  renderPosts(FALLBACK_POSTS, t);
+  tryAutoOpen();
 }
 
 function render() {
@@ -648,29 +714,7 @@ function render() {
     tryAutoOpen();
     return;
   }
-  fetch(BLOG_GUIDING_URL)
-    .then(function(r) { return r.ok ? r.text() : Promise.reject(); })
-    .then(function(text) {
-      var posts = parseGuiding(text);
-      if (posts.length > 0) {
-        computeUrlSeqs(posts);
-        _cachedPosts = posts;
-        renderPosts(posts, t);
-        tryAutoOpen();
-      } else {
-        computeUrlSeqs(FALLBACK_POSTS);
-        _cachedPosts = FALLBACK_POSTS;
-        renderPosts(FALLBACK_POSTS, t);
-        tryAutoOpen();
-      }
-    })
-    .catch(function() {
-      computeUrlSeqs(FALLBACK_POSTS);
-      _cachedPosts = FALLBACK_POSTS;
-      renderPosts(FALLBACK_POSTS, t);
-      tryAutoOpen();
-    });
-}
+  loadBlogList(t, tryAutoOpen, 0);
 
 function applyTheme() {
   document.documentElement.classList.toggle("dark", dark);
