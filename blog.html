@@ -778,12 +778,31 @@ function commentApi(method, key, body) {
   var opts = { method: method, headers: { "Content-Type": "application/json" } };
   if (COMMENT_TOKEN) opts.headers["Authorization"] = "Bearer " + COMMENT_TOKEN;
   if (body) opts.body = JSON.stringify(body);
-  return fetch(url, opts).then(function(r) { return r.ok ? r.json() : Promise.reject(); });
+  return fetchWithTimeout(url, 8000, opts).then(function(r) { return r.ok ? r.json() : Promise.reject(); });
+}
+
+function fetchWithTimeout(url, timeout, opts) {
+  timeout = timeout || 10000;
+  return new Promise(function(resolve, reject) {
+    var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+    var timer = setTimeout(function() {
+      if (controller) controller.abort();
+      reject(new Error("timeout"));
+    }, timeout);
+    var fetchOpts = controller ? Object.assign({ signal: controller.signal }, opts || {}) : (opts || {});
+    fetch(url, fetchOpts).then(function(r) {
+      clearTimeout(timer);
+      resolve(r);
+    }, function(e) {
+      clearTimeout(timer);
+      reject(e);
+    });
+  });
 }
 
 function checkLogin() {
-  if (!COMMENT_TOKEN) { COMMENT_USER = null; return; }
-  fetch(WORKER_URL + "/api/me", { headers: { "Authorization": "Bearer " + COMMENT_TOKEN } })
+  if (!COMMENT_TOKEN) { COMMENT_USER = null; renderLoginState(); return; }
+  fetchWithTimeout(WORKER_URL + "/api/me", 5000, { headers: { "Authorization": "Bearer " + COMMENT_TOKEN } })
     .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
     .then(function(d) {
       if (d.user) {
@@ -796,7 +815,7 @@ function checkLogin() {
         renderLoginState();
       }
     })
-    .catch(function() {});
+    .catch(function() { COMMENT_TOKEN = null; COMMENT_USER = null; renderLoginState(); });
 }
 
 function loginWith(provider) {
