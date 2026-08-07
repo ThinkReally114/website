@@ -8,17 +8,17 @@
 #URLtoGithub指向文档的url
 #Whethertosetthetop是否置顶
 
-Documentreleaseorupdatetime=20260806
+Documentreleaseorupdatetime=20260808
 Samedayupdatesequence=1
-Documenttitle=测试
-Briefintroductionofdocuments=这是一个测试文章
+Documenttitle=搭建这个网站我原因
+Briefintroductionofdocuments=搭建这个网站的原因和更新和todo
 IsthereaGiteeshunt=true
 URLtoGitee=https://gitee.com/thinkreally123/website/raw/main/does/blog/test.md
 URLtoGithub=https://github.com/ThinkReally114/website/blob/816ca49a94b3bcfd88c8dff59697e6f7f09ec281/does/blog/test.md
 Whethertosetthetop=false
 
-Documentreleaseorupdatetime=20260806
-Samedayupdatesequence=2
+Documentreleaseorupdatetime=20260807
+Samedayupdatesequence=1
 Documenttitle=网站的制作过程
 Briefintroductionofdocuments=关于网站的各种制作过程
 IsthereaGiteeshunt=true
