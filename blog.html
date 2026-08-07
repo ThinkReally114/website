@@ -230,7 +230,6 @@ body.article-open .navbar-back { opacity: 1; transform: translateX(0); pointer-e
 
 <section class="article-view" id="article-section">
   <div class="container-narrow">
-    <button class="back-link" id="back-to-list"></button>
     <div class="article-meta" id="article-meta"></div>
     <h1 id="article-title"></h1>
     <div class="article-body" id="article-body"></div>
@@ -473,9 +472,8 @@ function openArticle(posts, idx, t, cardEl) {
   var d = new Date(post.date);
   var dateStr = d.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", { year: "numeric", month: "short", day: "numeric" });
   var articleKey = "post-" + idx;
-  document.getElementById("article-meta").innerHTML = "<time>" + dateStr + "</time><span class=\"article-views\" id=\"article-views\">" + ICONS.eye + " ...</span>";
+  document.getElementById("article-meta").innerHTML = "<time>" + dateStr + "</time><span class=\"article-views\" id=\"article-views\">" + ICONS.eye + " 0</span>";
   document.getElementById("article-title").textContent = post.title;
-  document.getElementById("back-to-list").innerHTML = ICONS.arrow + " " + t.backToList;
   document.getElementById("navbar-back").innerHTML = ICONS.arrow + " " + t.backToList;
   document.getElementById("article-body").innerHTML = '<div class="article-loading">' + t.loading + "</div>";
   document.getElementById("article-footer").innerHTML = "";
@@ -492,10 +490,19 @@ function openArticle(posts, idx, t, cardEl) {
 
   incrementViews(articleKey, function(count) {
     var viewsEl = document.getElementById("article-views");
-    if (viewsEl && count !== null) {
-      viewsEl.innerHTML = ICONS.eye + " " + count.toLocaleString();
+    if (viewsEl) {
+      viewsEl.innerHTML = ICONS.eye + " " + (count !== null ? count.toLocaleString() : "0");
     }
   });
+
+  var now = new Date();
+  var dateSuffix = now.getFullYear().toString() +
+    (now.getMonth() + 1).toString().padStart(2, "0") +
+    now.getDate().toString().padStart(2, "0") + "-" +
+    (idx + 1).toString().padStart(2, "0");
+  if (typeof history !== "undefined" && history.pushState) {
+    history.pushState({ article: idx }, "", "blog.html/" + dateSuffix);
+  }
 
   var sourceUrl = post.githubUrl || post.url;
   var rawUrl = sourceUrl ? githubBlobToRaw(sourceUrl) : null;
@@ -532,6 +539,10 @@ function closeArticle() {
   artSection.classList.add("closing");
 
   document.body.classList.remove("article-open");
+
+  if (typeof history !== "undefined" && history.pushState) {
+    history.pushState({}, "", "blog.html");
+  }
 
   setTimeout(function() {
     artSection.classList.remove("closing");
@@ -613,12 +624,17 @@ window.addEventListener("scroll", function() {
   document.getElementById("navbar").classList.toggle("scrolled", window.scrollY > 12);
 }, { passive: true });
 
+window.addEventListener("popstate", function(e) {
+  if (document.body.classList.contains("article-open")) {
+    closeArticle();
+  }
+});
+
 try {
   document.documentElement.classList.toggle("dark", dark);
   document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
   document.getElementById("lang-btn").addEventListener("click", toggleLang);
   document.getElementById("theme-btn").addEventListener("click", toggleTheme);
-  document.getElementById("back-to-list").addEventListener("click", closeArticle);
   document.getElementById("navbar-back").addEventListener("click", closeArticle);
   render();
 } catch(e) {
