@@ -312,26 +312,64 @@ var ICONS = {
 };
 
 var JB_URL = "https://jsonblob.com/api/jsonBlob/019fdd20-82a2-7624-aca3-b8774ee092de";
+var VIEWS_STORAGE_KEY = "thinkreally_blog_views";
+
+function getLocalViews() {
+  try {
+    var raw = localStorage.getItem(VIEWS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) {
+    return {};
+  }
+}
+
+function setLocalViews(data) {
+  try {
+    localStorage.setItem(VIEWS_STORAGE_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
 
 function incrementViews(key, callback) {
   if (typeof fetch === "undefined") { callback(null); return; }
+  var localData = getLocalViews();
+  localData[key] = (localData[key] || 0) + 1;
+  setLocalViews(localData);
+  var localCount = localData[key];
   fetch(JB_URL)
     .then(function(r) { return r.json().catch(function() { return {}; }); })
-    .then(function(data) {
-      data[key] = (data[key] || 0) + 1;
-      return fetch(JB_URL, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
-        .then(function() { callback(data[key]); })
-        .catch(function() { callback(data[key]); });
+    .then(function(remoteData) {
+      var remoteCount = (remoteData[key] || 0) + 1;
+      var finalCount = Math.max(localCount, remoteCount);
+      remoteData[key] = finalCount;
+      localData[key] = finalCount;
+      setLocalViews(localData);
+      return fetch(JB_URL, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(remoteData) })
+        .then(function() { callback(finalCount); })
+        .catch(function() { callback(finalCount); });
     })
-    .catch(function() { callback(null); });
+    .catch(function() { callback(localCount); });
 }
 
 function fetchViews(key, callback) {
-  if (typeof fetch === "undefined") { callback(null); return; }
+  if (typeof fetch === "undefined") {
+    var local = getLocalViews();
+    callback(local && local[key] != null ? local[key] : 0);
+    return;
+  }
+  var localData = getLocalViews();
+  var localCount = localData[key] || 0;
   fetch(JB_URL)
     .then(function(r) { return r.ok ? r.json() : null; })
-    .then(function(d) { callback(d && d[key] != null ? d[key] : 0); })
-    .catch(function() { callback(null); });
+    .then(function(d) {
+      var remoteCount = d && d[key] != null ? d[key] : 0;
+      var finalCount = Math.max(localCount, remoteCount);
+      if (localCount < remoteCount) {
+        localData[key] = remoteCount;
+        setLocalViews(localData);
+      }
+      callback(finalCount || 0);
+    })
+    .catch(function() { callback(localCount || 0); });
 }
 
 var dict = {
