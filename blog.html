@@ -378,7 +378,9 @@ function renderPosts(posts, t) {
 }
 
 function githubBlobToRaw(url) {
-  return url.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/");
+  return url
+    .replace("github.com", "raw.githubusercontent.com")
+    .replace(/\/blob\/[a-f0-9]{7,40}\//, "/main/");
 }
 
 function renderMarkdown(md) {
