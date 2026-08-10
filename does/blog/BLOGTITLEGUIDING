@@ -8,6 +8,15 @@
 #URLtoGithub指向文档的url
 #Whethertosetthetop是否置顶
 
+Documentreleaseorupdatetime=20260811
+Samedayupdatesequence=1
+Documenttitle=fxxkyouwindowa
+Briefintroductionofdocuments=关于我修电脑和后面的吐槽
+IsthereaGiteeshunt=true
+URLtoGitee=https://gitee.com/thinkreally123/website/raw/main/does/blog/fxxkyouwindows.md
+URLtoGithub=https://github.com/ThinkReally114/website/blob/3b737c32010fec84d03fc8c728c02d215935058c/does/blog/fxxkyouwindows.md
+Whethertosetthetop=false
+
 Documentreleaseorupdatetime=20260808
 Samedayupdatesequence=1
 Documenttitle=搭建这个网站的原因
