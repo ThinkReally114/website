@@ -598,7 +598,7 @@ function openArticle(posts, idx, t, cardEl) {
 
   var d = new Date(post.date);
   var dateStr = d.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", { year: "numeric", month: "short", day: "numeric" });
-  var articleKey = "post-" + idx;
+  var articleKey = buildPostUrlSuffix(post);
   _articleKey = articleKey;
   var cachedCount = getCachedViews(articleKey);
   document.getElementById("article-meta").innerHTML = "<time>" + dateStr + "</time><span class=\"article-views\" id=\"article-views\">" + ICONS.eye + " " + (cachedCount != null ? cachedCount.toLocaleString() : t.loading) + "</span>";
