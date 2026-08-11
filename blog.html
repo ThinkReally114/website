@@ -238,7 +238,23 @@ body.article-open .navbar-back { opacity: 1; transform: translateX(0); pointer-e
     <div class="article-body" id="article-body"></div>
     <div class="article-footer" id="article-footer"></div>
     <div class="comments-section" id="comments-section">
-      <div id="giscus-container"></div>
+      <div id="giscus-container">
+        <script src="https://giscus.app/client.js"
+          data-repo="ThinkReally114/website"
+          data-repo-id="R_kgDOTdaBzA"
+          data-category="Announcements"
+          data-category-id="DIC_kwDOTdaBzM4DC5dB"
+          data-mapping="specific"
+          data-term="blog"
+          data-strict="0"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+      </div>
     </div>
   </div>
 </section>
@@ -693,40 +709,16 @@ function closeArticle() {
   }, 220);
 }
 
-var _giscusLoaded = false;
-
 function initGiscus(key) {
-  var container = document.getElementById("giscus-container");
-  if (!container) return;
-
-  if (_giscusLoaded) {
-    setGiscusTerm(key);
-    return;
-  }
-  _giscusLoaded = true;
-
-  var script = document.createElement("script");
-  script.src = "https://giscus.app/client.js";
-  script.setAttribute("data-repo", "ThinkReally114/website");
-  script.setAttribute("data-repo-id", "R_kgDOTdaBzA");
-  script.setAttribute("data-category", "Announcements");
-  script.setAttribute("data-category-id", "DIC_kwDOTdaBzM4DC5dB");
-  script.setAttribute("data-mapping", "specific");
-  script.setAttribute("data-term", key || "blog");
-  script.setAttribute("data-strict", "0");
-  script.setAttribute("data-reactions-enabled", "1");
-  script.setAttribute("data-emit-metadata", "0");
-  script.setAttribute("data-input-position", "top");
-  script.setAttribute("data-theme", document.documentElement.classList.contains("dark") ? "dark_dimmed" : "light");
-  script.setAttribute("data-lang", lang === "zh" ? "zh-CN" : "en");
-  script.crossOrigin = "anonymous";
-  script.async = true;
-  container.appendChild(script);
+  setGiscusTerm(key);
 }
 
 function setGiscusTerm(key) {
   var iframe = document.querySelector(".giscus-frame");
-  if (!iframe) return;
+  if (!iframe) {
+    setTimeout(function() { setGiscusTerm(key); }, 500);
+    return;
+  }
   iframe.contentWindow.postMessage(
     { giscus: { setConfig: { term: key || "blog" } } },
     "https://giscus.app"
