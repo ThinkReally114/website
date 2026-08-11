@@ -693,10 +693,17 @@ function closeArticle() {
   }, 220);
 }
 
+var _giscusLoaded = false;
+
 function initGiscus(key) {
   var container = document.getElementById("giscus-container");
   if (!container) return;
-  container.innerHTML = "";
+
+  if (_giscusLoaded) {
+    setGiscusTerm(key);
+    return;
+  }
+  _giscusLoaded = true;
 
   var script = document.createElement("script");
   script.src = "https://giscus.app/client.js";
@@ -715,6 +722,15 @@ function initGiscus(key) {
   script.crossOrigin = "anonymous";
   script.async = true;
   container.appendChild(script);
+}
+
+function setGiscusTerm(key) {
+  var iframe = document.querySelector(".giscus-frame");
+  if (!iframe) return;
+  iframe.contentWindow.postMessage(
+    { giscus: { setConfig: { term: key || "blog" } } },
+    "https://giscus.app"
+  );
 }
 
 function updateGiscusTheme() {
