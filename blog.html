@@ -712,7 +712,6 @@ function initGiscus(key) {
   script.setAttribute("data-input-position", "top");
   script.setAttribute("data-theme", document.documentElement.classList.contains("dark") ? "dark_dimmed" : "light");
   script.setAttribute("data-lang", lang === "zh" ? "zh-CN" : "en");
-  script.setAttribute("data-loading", "lazy");
   script.crossOrigin = "anonymous";
   script.async = true;
   container.appendChild(script);
