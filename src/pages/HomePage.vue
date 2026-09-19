@@ -60,6 +60,7 @@ const { t, locale } = useI18n();
 const isZh = locale === 'zh-CN';
 
 const GITHUB = 'https://github.com/ThinkReally114';
+const BILIBILI = 'https://space.bilibili.com/1102225826';
 
 const projects = [
   {

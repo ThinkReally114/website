@@ -1,5 +1,6 @@
 ﻿<template>
   <div class="app-root">
+    <canvas ref="waveCanvas" class="wave-canvas"></canvas>
     <header class="app-topbar">
       <button
         type="button"
@@ -95,7 +96,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from './components/i18n/index';
 import CookieConsent from './components/CookieConsent.vue';
@@ -104,6 +105,8 @@ const route = useRoute();
 const { t, locale } = useI18n();
 
 const sidebarOpen = ref(false);
+const waveCanvas = ref(null);
+let animId = null;
 
 const localeLabel = computed(() => (locale === 'zh-CN' ? '中' : 'EN'));
 
@@ -111,6 +114,65 @@ function toggleLocale() {
   localStorage.setItem('winui-locale', locale === 'zh-CN' ? 'en-US' : 'zh-CN');
   location.reload();
 }
+
+onMounted(() => {
+  const canvas = waveCanvas.value;
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h;
+
+  function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  let t = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+
+    const isDark = document.documentElement.classList.contains('theme-dark')
+      || (!document.documentElement.classList.contains('theme-light')
+        && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const color = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+
+    const lines = 4;
+    for (let l = 0; l < lines; l++) {
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+
+      for (let x = 0; x <= w; x += 2) {
+        const y = h * 0.5
+          + Math.sin(x * 0.008 + t * 0.02 + l * 1.2) * h * 0.12
+          + Math.sin(x * 0.015 + t * 0.03 + l * 0.8) * h * 0.06
+          + Math.sin(x * 0.003 + t * 0.01 + l * 2.0) * h * 0.08;
+
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    t += 1;
+    animId = requestAnimationFrame(draw);
+  }
+
+  draw();
+});
+
+onBeforeUnmount(() => {
+  if (animId) cancelAnimationFrame(animId);
+});
 </script>
 
 <style scoped>
@@ -120,6 +182,15 @@ function toggleLocale() {
   height: 100vh;
   overflow: hidden;
   background: var(--app-bg, #f3f3f3);
+}
+
+.wave-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .app-topbar {
