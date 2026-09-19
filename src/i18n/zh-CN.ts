@@ -15,6 +15,7 @@ const resources: Record<string, string> = {
   'blog.entrySubtitle': '写一些开发过程中踩过的坑和学到的东西。',
   'blog.visit': '前往博客',
   'blog.allPosts': '所有文章',
+  'blog.empty': '还没有文章，敬请期待。',
   'about.title': '关于我',
   'about.p1': '我是 ThinkReally114，一名开发者和 Minecraft 模组作者。从 2025 年开始活跃在 GitHub 上，主要折腾 Minecraft Fabric 模组、Web 前端界面和一些跨平台工具。',
   'about.p2': '我做的项目大多源自自己的需求——PVPUtils 在 Linux 上崩了，就写了个修复 mod 并参与 PvP 模组的开发。比起空想，我更喜欢直接动手把问题解决。',

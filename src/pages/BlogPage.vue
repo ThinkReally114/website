@@ -16,7 +16,7 @@
         </router-link>
       </article>
 
-      <p v-if="posts.length === 0" class="blog-empty">{{ t('notfound.desc') }}</p>
+      <p v-if="posts.length === 0" class="blog-empty">{{ t('blog.empty') }}</p>
     </div>
   </div>
 </template>

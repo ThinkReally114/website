@@ -15,6 +15,7 @@ const resources: Record<string, string> = {
   'blog.entrySubtitle': "Notes on problems I've hit and things I've learned along the way.",
   'blog.visit': 'Visit blog',
   'blog.allPosts': 'All posts',
+  'blog.empty': 'No posts yet. Stay tuned.',
   'about.title': 'About',
   'about.p1': "I'm ThinkReally114, a developer and Minecraft mod author. Active on GitHub since 2025, mostly working on Minecraft Fabric mods, web front-end interfaces, and cross-platform tools.",
   'about.p2': "Most of my projects come from my own needs—PVPUtils crashed on Linux so I wrote a fix mod and joined PvP mod development. I'd rather build something than just think about it.",
