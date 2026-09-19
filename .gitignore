@@ -1,0 +1,7 @@
+node_modules
+dist
+*.local
+.trae
+.DS_Store
+npm-debug.log*
+thumbcache.db
