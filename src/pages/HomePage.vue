@@ -120,6 +120,7 @@ function scrollTo(el) {
 
 .hero {
   padding: 48px 8px 40px;
+  text-align: center;
 }
 
 .hero-eyebrow {
@@ -138,7 +139,7 @@ function scrollTo(el) {
 }
 
 .hero-tagline {
-  margin: 0 0 28px;
+  margin: 0 auto 28px;
   max-width: 560px;
   font-size: 16px;
   line-height: 1.6;
@@ -147,6 +148,7 @@ function scrollTo(el) {
 
 .hero-actions {
   display: flex;
+  justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
 }
