@@ -41,7 +41,7 @@
       <router-link class="blog-cta" :to="'/blog'">{{ t('blog.visit') }}</router-link>
     </section>
 
-    <section class="section">
+    <section class="section section-left">
       <h2 class="section-title">{{ t('about.title') }}</h2>
       <p class="about-p">{{ t('about.p1') }}</p>
       <p class="about-p">{{ t('about.p2') }}</p>
@@ -52,7 +52,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section section-left">
       <h2 class="section-title">{{ t('contact.title') }}</h2>
       <p class="section-sub">{{ t('contact.subtitle') }}</p>
       <div class="contact-links">
@@ -208,6 +208,16 @@ function scrollTo(el) {
 }
 
 .section-blog .section-sub {
+  text-align: left;
+}
+
+.section-left .section-title {
+  text-align: left;
+}
+
+.section-left .section-sub {
+  margin-left: 0;
+  margin-right: 0;
   text-align: left;
 }
 

@@ -12,6 +12,10 @@
           class="app-nav-item"
           :class="{ 'is-active': route.name === 'blog' || route.name === 'post' }"
           :to="'/blog'">{{ t('nav.blog') }}</router-link>
+        <router-link
+          class="app-nav-item"
+          :class="{ 'is-active': route.name === 'friends' }"
+          :to="'/friends'">{{ t('nav.friends') }}</router-link>
       </nav>
 
       <div class="app-actions">

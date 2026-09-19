@@ -19,6 +19,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('./pages/PostPage.vue')
   },
   {
+    path: '/friends',
+    name: 'friends',
+    component: () => import('./pages/FriendLinksPage.vue')
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'notfound',
     component: () => import('./pages/NotFoundPage.vue')
