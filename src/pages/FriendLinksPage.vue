@@ -38,8 +38,8 @@ const friends = [
     host: 'blog.520pro.top',
     url: 'https://blog.520pro.top/',
     avatar: 'https://avatars.githubusercontent.com/u/201088719?v=4',
-    zh: 'Protect What You Love. 技术博客、社区论坛与实用在线工具集。',
-    en: 'Protect What You Love. A tech blog, community forum, and a set of practical online tools.'
+    zh: 'Protect What You Love.',
+    en: 'Protect What You Love.'
   },
   {
     name: 'Hangou Code Lab',
