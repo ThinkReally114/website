@@ -48,6 +48,14 @@ const friends = [
     avatar: 'https://avatars.githubusercontent.com/u/300163710?v=4',
     zh: '一个安静的小站，记录学习、代码与生活。',
     en: 'A quiet little site recording learning, code, and life.'
+  },
+  {
+    name: 'Xiaobocm',
+    host: 'blog.xiaobocm.com',
+    url: 'https://blog.xiaobocm.com',
+    avatar: 'https://avatars.githubusercontent.com/u/262091240?v=4',
+    zh: '一个热爱技术、喜欢折腾的科技爱好者。',
+    en: 'A tech enthusiast who loves technology and tinkering.'
   }
 ];
 </script>

@@ -33,6 +33,11 @@ import { marked } from 'marked';
 import { getPost } from '../posts/index';
 import { useI18n } from '../components/i18n/index';
 
+marked.setOptions({
+  breaks: true,
+  gfm: true
+});
+
 const GISCUS = {
   repo: 'ThinkReally114/website',
   repoId: 'R_kgDOTdaBzA',
@@ -139,6 +144,8 @@ watch(
   color: var(--text-primary, inherit);
   font-size: 15px;
   line-height: 1.75;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .post-body :deep(h1),
@@ -156,6 +163,11 @@ watch(
 
 .post-body :deep(a) {
   color: var(--accent-text, inherit);
+  text-decoration: none;
+}
+
+.post-body :deep(a:hover) {
+  text-decoration: underline;
 }
 
 .post-body :deep(blockquote) {
@@ -190,7 +202,7 @@ watch(
   border-radius: 6px;
   background: color-mix(in srgb, var(--text-primary, #000) 6%, transparent);
   border: 1px solid var(--card-stroke, rgba(0, 0, 0, 0.06));
-  overflow: auto;
+  overflow-x: auto;
   user-select: text;
 }
 
@@ -211,6 +223,8 @@ watch(
 .post-body :deep(table) {
   border-collapse: collapse;
   margin: 16px 0;
+  display: block;
+  overflow-x: auto;
 }
 
 .post-body :deep(th),

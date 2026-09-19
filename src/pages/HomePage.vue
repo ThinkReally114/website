@@ -4,16 +4,16 @@
       <h1 class="hero-name">ThinkReally114</h1>
       <p class="hero-tagline">{{ t('hero.tagline') }}</p>
       <div class="hero-actions">
-        <button type="button" class="hero-btn hero-btn-primary" @click="scrollTo(workRef)">
-          {{ t('hero.projects') }}
-        </button>
         <a class="hero-btn hero-btn-ghost" :href="GITHUB" target="_blank" rel="noreferrer">
           {{ t('hero.github') }}
+        </a>
+        <a class="hero-btn hero-btn-ghost" :href="BILIBILI" target="_blank" rel="noreferrer">
+          {{ t('hero.bilibili') }}
         </a>
       </div>
     </section>
 
-    <section ref="workRef" class="section">
+    <section class="section">
       <h2 class="section-title">{{ t('work.title') }}</h2>
       <p class="section-sub">{{ t('work.subtitle') }}</p>
 
@@ -45,19 +45,6 @@
       <h2 class="section-title">{{ t('about.title') }}</h2>
       <p class="about-p">{{ t('about.p1') }}</p>
       <p class="about-p">{{ t('about.p2') }}</p>
-      <p class="about-p">{{ t('about.p3') }}</p>
-      <h3 class="about-stack-title">{{ t('about.stack') }}</h3>
-      <div class="stack-chips">
-        <span v-for="s in stack" :key="s" class="stack-chip">{{ s }}</span>
-      </div>
-    </section>
-
-    <section class="section section-left">
-      <h2 class="section-title">{{ t('contact.title') }}</h2>
-      <p class="section-sub">{{ t('contact.subtitle') }}</p>
-      <div class="contact-links">
-        <a class="contact-link" :href="GITHUB" target="_blank" rel="noreferrer">{{ t('contact.github') }} @ThinkReally114</a>
-      </div>
     </section>
 
     <footer class="footer">
@@ -67,7 +54,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { useI18n } from '../components/i18n/index';
 
 const { t, locale } = useI18n();
@@ -75,19 +61,17 @@ const isZh = locale === 'zh-CN';
 
 const GITHUB = 'https://github.com/ThinkReally114';
 
-const stack = ['Java', 'HTML', 'CSS', 'JavaScript', 'TypeScript', 'Vue', 'Electron', 'Fabric'];
-
 const projects = [
   {
     name: 'PVPUtils',
     repo: 'bakabaicai/PVPUtils',
     zh: {
-      desc: '一个为高版本 Minecraft PVP 带来众多实用小功能的模组。',
-      highlights: ['使用 Java 开发', '为高版本 Minecraft PVP 提供多个实用小功能']
+      desc: '面向 Minecraft 1.21.11 Fabric 的客户端辅助模组，为原版游戏带来实用的生存与 PVP 小工具，以及大量由 Skija 驱动的精美视觉组件。支持自动更新。',
+      highlights: ['战斗、视觉、工具、优化等多模块', '防砍动画、动态模糊、HUD 编辑器', '开源且持续维护中']
     },
     en: {
-      desc: 'A mod that brings many practical small features to high-version Minecraft PVP.',
-      highlights: ['Developed in Java', 'Adds practical small features for high-version Minecraft PVP']
+      desc: 'A client-side utility mod for Minecraft 1.21.11 Fabric, bringing practical survival and PVP tools along with polished Skija-powered visual components. Supports auto-updates.',
+      highlights: ['Combat, Render, Tool, Optimize modules', 'Sword blocking animation, motion blur, HUD editor', 'Open source and actively maintained']
     }
   },
   {
@@ -103,12 +87,6 @@ const projects = [
     }
   }
 ];
-
-const workRef = ref(null);
-
-function scrollTo(el) {
-  el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
 </script>
 
 <style scoped>
@@ -231,6 +209,10 @@ function scrollTo(el) {
   .project-grid {
     grid-template-columns: 1fr;
   }
+
+  .hero-name {
+    font-size: 32px;
+  }
 }
 
 .project-card {
@@ -343,43 +325,6 @@ function scrollTo(el) {
   font-size: 15px;
   line-height: 1.7;
   color: var(--text-secondary, inherit);
-  max-width: 720px;
-}
-
-.about-stack-title {
-  margin: 24px 0 12px;
-  font-size: 16px;
-  color: var(--text-primary, inherit);
-}
-
-.stack-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.stack-chip {
-  padding: 4px 12px;
-  font-size: 13px;
-  border-radius: 12px;
-  background: var(--subtle-secondary, rgba(0, 0, 0, 0.04));
-  color: var(--text-primary, inherit);
-}
-
-.contact-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.contact-link {
-  font-size: 15px;
-  color: var(--text-primary, inherit);
-  text-decoration: none;
-}
-
-.contact-link:hover {
-  text-decoration: underline;
 }
 
 .footer {
