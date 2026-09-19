@@ -175,20 +175,29 @@ watch(
 }
 
 .post-body :deep(code) {
+  padding: 2px 6px;
+  border-radius: 4px;
   font-family: 'Cascadia Code', Consolas, monospace;
   font-size: 13px;
+  color: var(--text-primary, inherit);
+  background: color-mix(in srgb, var(--text-primary, #000) 8%, transparent);
+  user-select: text;
 }
 
 .post-body :deep(pre) {
   margin: 16px 0;
   padding: 16px;
   border-radius: 6px;
-  background: var(--ctrl-fill-default, rgba(255, 255, 255, 0.7));
+  background: color-mix(in srgb, var(--text-primary, #000) 6%, transparent);
   border: 1px solid var(--card-stroke, rgba(0, 0, 0, 0.06));
   overflow: auto;
+  user-select: text;
 }
 
 .post-body :deep(pre code) {
+  padding: 0;
+  border-radius: 0;
+  background: none;
   color: var(--text-primary, inherit);
   line-height: 1.6;
 }
