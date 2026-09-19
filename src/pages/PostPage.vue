@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { marked } from 'marked';
 import { getPost } from '../posts/index';
@@ -38,7 +38,7 @@ const GISCUS = {
   repoId: 'R_kgDOTdaBzA',
   category: 'Announcements',
   categoryId: 'DIC_kwDOTdaBzM4DC5dB',
-  mapping: 'pathname'
+  mapping: 'specific'
 };
 
 const route = useRoute();
@@ -53,6 +53,7 @@ const giscusReady = computed(() => Boolean(GISCUS.repo && GISCUS.repoId && GISCU
 function loadGiscus() {
   const el = giscusRef.value;
   if (!el) return;
+  el.innerHTML = '';
   const script = document.createElement('script');
   script.src = 'https://giscus.app/client.js';
   script.setAttribute('data-repo', GISCUS.repo);
@@ -60,6 +61,7 @@ function loadGiscus() {
   script.setAttribute('data-category', GISCUS.category);
   script.setAttribute('data-category-id', GISCUS.categoryId);
   script.setAttribute('data-mapping', GISCUS.mapping);
+  script.setAttribute('data-term', `/post/${String(route.params.slug ?? '')}`);
   script.setAttribute('data-strict', '0');
   script.setAttribute('data-reactions-enabled', '1');
   script.setAttribute('data-emit-metadata', '0');
@@ -73,6 +75,15 @@ function loadGiscus() {
 onMounted(() => {
   if (giscusReady.value) loadGiscus();
 });
+
+watch(
+  () => route.params.slug,
+  async () => {
+    if (!giscusReady.value) return;
+    await nextTick();
+    loadGiscus();
+  }
+);
 </script>
 
 <style scoped>
