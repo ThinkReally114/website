@@ -1,10 +1,10 @@
 ---
 title: 逐行拆解PVPUtils的液态玻璃实现
-date: 2026-09-19
+date: 2026-10-04
 desc: 逐行解析PVPUtils的所有液态玻璃视觉实现
 ---
 
->Github仓库: https://github.com/bakabaicai/PVPUtils
+>Github仓库: bakabaicai/PVPUtils
 
 技术栈：**Java + Skija + OpenGL**
 
@@ -14,7 +14,7 @@ desc: 逐行解析PVPUtils的所有液态玻璃视觉实现
 
 ---
 
-## 0. 一分钟速览
+## 0. 速览
 
 所谓"液态玻璃"，本质上不是真的画一块玻璃，而是**把屏幕背后的画面"抠"下来 → 做模糊 + 饱和度增强 → 用一段 GLSL 着色器按圆角矩形的 Signed Distance Field（SDF）做透镜折射和色散 → 再贴回原位**，最后叠上一层半透明色调（tint）、外阴影和一条沿视角方向变化的高光描边
 
@@ -182,7 +182,7 @@ uniform float slotRadius;
 - `content` 是 Skia 的 `shader` 类型，调用 `content.eval(coord)` 就能采样背景。
 - 后面一长串 `slot*` 是为"物品栏"这种带格子的面板准备的：每个小格子也有自己的圆角折射。
 
-### 3.2 主函数：算 SDF
+### 3.2 算 SDF
 
 ```glsl
 half4 main(float2 coord) {
