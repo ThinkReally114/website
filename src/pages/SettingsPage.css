@@ -1,0 +1,61 @@
+.settings {
+  max-width: 760px;
+}
+
+.settings-group {
+  margin-bottom: 34px;
+}
+
+.settings-group-title {
+  margin-bottom: 12px;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.setting-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+
+.setting-text {
+  min-width: 0;
+}
+
+.setting-name {
+  font-size: 15.5px;
+  font-weight: 700;
+}
+
+.setting-desc {
+  margin-top: 4px;
+  color: var(--text-2);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.setting-control {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.setting-hint {
+  color: var(--text-3);
+  font-size: 11.5px;
+}
+
+@media (max-width: 620px) {
+  .setting-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

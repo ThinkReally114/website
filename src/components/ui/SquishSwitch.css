@@ -1,0 +1,81 @@
+.squish-switch {
+  position: relative;
+  flex: none;
+  width: 58px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--track);
+  transition: background var(--duration) var(--ease-soft), border-color var(--duration) var(--ease-soft);
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.squish-switch.is-checked {
+  background: color-mix(in srgb, var(--text) 22%, transparent);
+}
+
+.squish-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: inline-flex;
+  transform: translate(-50%, -50%);
+  color: #23201d;
+  pointer-events: none;
+  transition: opacity var(--duration) var(--ease-soft);
+}
+
+.squish-icon-sun {
+  opacity: 1;
+}
+
+.squish-icon-moon {
+  opacity: 0;
+}
+
+.squish-switch.is-checked .squish-icon-sun {
+  opacity: 0;
+}
+
+.squish-switch.is-checked .squish-icon-moon {
+  opacity: 1;
+}
+
+.squish-thumb-wrap {
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  transition: transform 360ms var(--ease-spring);
+  will-change: transform;
+}
+
+.squish-thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--thumb);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
+  transition: transform 200ms var(--ease-out);
+  will-change: transform;
+}
+
+.squish-thumb.is-squashing {
+  animation: squish-land 340ms var(--ease-spring);
+}
+
+@keyframes squish-land {
+  0% {
+    scale: 0.86 1.14;
+  }
+  55% {
+    scale: 1.12 0.9;
+  }
+  100% {
+    scale: 1 1;
+  }
+}

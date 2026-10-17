@@ -1,0 +1,119 @@
+.glide {
+  position: relative;
+  display: inline-flex;
+}
+
+.glide-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 12px 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background var(--duration-fast) var(--ease-soft), border-color var(--duration-fast) var(--ease-soft);
+}
+
+.glide-trigger:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+}
+
+.glide-value {
+  line-height: 1;
+}
+
+.glide-chevron {
+  display: inline-flex;
+  color: var(--text-3);
+  transition: transform 260ms var(--ease-spring);
+}
+
+.glide-trigger[aria-expanded='true'] .glide-chevron {
+  transform: rotate(180deg);
+}
+
+.glide-pop {
+  position: absolute;
+  top: calc(100% + 8px);
+  z-index: 90;
+  min-width: 168px;
+  padding: 6px;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--bg-soft) 88%, transparent);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: glide-pop-in 220ms var(--ease-spring);
+}
+
+.glide-pop.align-end {
+  right: 0;
+  transform-origin: top right;
+}
+
+.glide-pop.align-start {
+  left: 0;
+  transform-origin: top left;
+}
+
+@keyframes glide-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.glide-highlight {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 0;
+  border-radius: var(--radius-sm);
+  background: var(--surface-strong);
+  transition: transform 260ms var(--ease-spring), height 260ms var(--ease-spring);
+}
+
+.glide-highlight.is-instant {
+  transition: none;
+}
+
+.glide-option {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 11px;
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  transition: color 160ms var(--ease-soft);
+}
+
+.glide-option.is-active {
+  color: var(--text);
+}
+
+.glide-option[aria-selected='true'] {
+  font-weight: 600;
+}
+
+.glide-option svg {
+  color: var(--accent-text);
+}

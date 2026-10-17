@@ -1,0 +1,251 @@
+.tech-card {
+  padding: 26px 32px 30px;
+}
+
+.tech-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tech-title {
+  font-size: 20px;
+}
+
+.tech-sub {
+  color: var(--text-2);
+  font-size: 14px;
+}
+
+.tech-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 44px;
+  align-items: center;
+  margin-top: 22px;
+}
+
+.tech-dial {
+  position: relative;
+  width: 236px;
+  height: 236px;
+}
+
+.tech-ring {
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+  overflow: visible;
+}
+
+.tech-dial[data-dragging] .tech-ring {
+  cursor: grabbing;
+}
+
+.tech-track {
+  fill: none;
+  stroke: var(--track);
+  stroke-width: 9;
+}
+
+.tech-arc {
+  fill: none;
+  stroke-width: 9;
+  opacity: 0.42;
+  stroke-dasharray: var(--arc-len);
+  stroke-dashoffset: var(--arc-len);
+  transition: stroke-dashoffset 900ms var(--ease-out), opacity 260ms var(--ease-soft),
+    stroke-width 260ms var(--ease-soft);
+  transition-delay: var(--arc-delay, 0ms), 0ms, 0ms;
+}
+
+.tech-arc.is-lit {
+  opacity: 1;
+  stroke-width: 11;
+}
+
+.reveal.is-in .tech-arc,
+html[data-nav-enter='1'] .tech-arc {
+  stroke-dashoffset: 0;
+}
+
+html[data-nav-enter='1'] .tech-arc {
+  transition: none;
+  transition-delay: 0ms;
+}
+
+.tech-comet path {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.tech-readout {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  pointer-events: none;
+}
+
+.tech-readout-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.tech-readout-value {
+  font-size: 31px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.tech-readout-unit {
+  margin-left: 1px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-3);
+}
+
+.tech-legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tech-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 180ms var(--ease-soft), color 180ms var(--ease-soft);
+}
+
+.tech-item:hover,
+.tech-item:focus-visible {
+  background: var(--surface-hover);
+}
+
+.tech-item.is-lit {
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
+.tech-dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+}
+
+.tech-name {
+  font-weight: 600;
+}
+
+.tech-value {
+  margin-left: auto;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.tech-table-wrap {
+  margin-top: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.tech-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.tech-table th,
+.tech-table td {
+  padding: 12px 18px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.tech-table thead th {
+  background: var(--surface-strong);
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.tech-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.tech-table th:first-child,
+.tech-table td:first-child {
+  width: 208px;
+}
+
+.tech-th-version,
+.tech-table-version {
+  width: 116px;
+}
+
+.tech-table-pick {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.tech-table-version,
+.tech-table-role {
+  color: var(--text-2);
+}
+
+.tech-table-version {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .tech-body {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 24px;
+  }
+
+  .tech-legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .tech-table-wrap {
+    overflow-x: auto;
+  }
+
+  .tech-table th,
+  .tech-table td {
+    padding: 10px 14px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 460px) {
+  .tech-legend {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

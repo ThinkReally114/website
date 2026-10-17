@@ -1,0 +1,30 @@
+.glare-hover {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.glare-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    460px circle at var(--gx, 50%) var(--gy, 0%),
+    var(--glare),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 320ms var(--ease-soft);
+}
+
+.glare-hover:hover::before,
+.glare-hover:focus-within::before {
+  opacity: 0.6;
+}
+
+.glare-content {
+  position: relative;
+  z-index: 2;
+}

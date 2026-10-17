@@ -1,0 +1,6 @@
+name = "thinkreally114-llm-proxy"
+main = "index.js"
+compatibility_date = "2026-10-17"
+
+[observability]
+enabled = true

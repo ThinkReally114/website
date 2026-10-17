@@ -1,0 +1,50 @@
+.segment {
+  position: relative;
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.segment-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: var(--radius-full);
+  background: var(--surface-strong);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-sm);
+  opacity: 0;
+  transition: transform 340ms var(--ease-spring), width 340ms var(--ease-spring), opacity 160ms var(--ease-soft);
+  will-change: transform;
+}
+
+.segment-thumb.is-ready {
+  opacity: 1;
+}
+
+.segment-option {
+  position: relative;
+  z-index: 1;
+  padding: 8px 18px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-2);
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: color 200ms var(--ease-soft);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.segment-option:hover {
+  color: var(--text);
+}
+
+.segment-option[aria-checked='true'] {
+  color: var(--text);
+}

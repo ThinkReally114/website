@@ -1,0 +1,112 @@
+:root {
+  --topbar-h: 60px;
+  --dock-space: 0px;
+
+  --font-sans: "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, "PingFang SC",
+    "Noto Sans SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  --font-mono: "Cascadia Code", "JetBrains Mono", "SF Mono", Consolas, "Liberation Mono", monospace;
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 999px;
+
+  --accent-a: #b8801f;
+  --accent-b: #dcae52;
+  --accent-c: #efd39a;
+  --gradient-accent: linear-gradient(115deg, var(--accent-a), var(--accent-b));
+  --gradient-sheen: linear-gradient(115deg, var(--accent-a), var(--accent-b), var(--accent-c));
+
+  --duration-fast: 140ms;
+  --duration: 240ms;
+  --duration-slow: 420ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-dark {
+  color-scheme: dark;
+
+  --bg: #100e0c;
+  --bg-soft: #17140f;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-strong: rgba(255, 255, 255, 0.075);
+  --surface-hover: rgba(255, 255, 255, 0.065);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.19);
+
+  --text: #f4f4f5;
+  --text-2: #a9a9af;
+  --text-3: #85858d;
+
+  --accent-text: #dfaf58;
+  --accent-contrast: #201404;
+  --ring: rgba(216, 168, 80, 0.6);
+
+  --track: rgba(255, 255, 255, 0.15);
+  --thumb: #f5f5f5;
+  --code-bg: rgba(255, 255, 255, 0.07);
+  --code-border: rgba(255, 255, 255, 0.08);
+
+  --lang-typescript: #4b8fdd;
+  --lang-css: #9f7fe0;
+  --lang-json: #9aa0a8;
+  --lang-html: #e0714e;
+
+  --dot: rgba(255, 255, 255, 0.075);
+  --glare: rgba(255, 255, 255, 0.14);
+  --glow-a: rgba(216, 160, 70, 0.2);
+  --glow-b: rgba(168, 162, 158, 0.12);
+
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.5);
+  --noise-opacity: 0.05;
+}
+
+.theme-light {
+  color-scheme: light;
+
+  --bg: #f5f3f0;
+  --bg-soft: #ffffff;
+  --surface: rgba(255, 255, 255, 0.68);
+  --surface-strong: #ffffff;
+  --surface-hover: #ffffff;
+  --border: rgba(28, 25, 23, 0.1);
+  --border-strong: rgba(28, 25, 23, 0.2);
+
+  --text: #1c1917;
+  --text-2: #57534e;
+  --text-3: #6b6661;
+
+  --accent-text: #8a5b0d;
+  --accent-contrast: #201404;
+  --ring: rgba(184, 128, 31, 0.5);
+
+  --track: rgba(28, 25, 23, 0.16);
+  --thumb: #ffffff;
+  --code-bg: rgba(28, 25, 23, 0.06);
+  --code-border: rgba(28, 25, 23, 0.08);
+
+  --lang-typescript: #3178c6;
+  --lang-css: #6b46a8;
+  --lang-json: #6b7280;
+  --lang-html: #d0451f;
+
+  --dot: rgba(28, 25, 23, 0.09);
+  --glare: rgba(255, 255, 255, 0.65);
+  --glow-a: rgba(216, 160, 70, 0.16);
+  --glow-b: rgba(168, 162, 158, 0.14);
+
+  --shadow-sm: 0 2px 10px rgba(28, 25, 23, 0.06);
+  --shadow-lg: 0 18px 48px rgba(28, 25, 23, 0.12);
+  --noise-opacity: 0.035;
+}
+
+@media (min-width: 761px) and (hover: hover) and (pointer: fine) {
+  :root {
+    --dock-space: 84px;
+  }
+}

@@ -1,0 +1,75 @@
+.swipe-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  z-index: 140;
+  width: min(560px, calc(100vw - 32px));
+  padding: 6px 22px 20px;
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--bg-soft) 86%, transparent);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  transform: translate(-50%, 0);
+  animation: toast-in 380ms var(--ease-spring);
+  transition: transform 340ms var(--ease-spring), opacity 240ms var(--ease-soft);
+  touch-action: pan-x;
+}
+
+.swipe-toast.is-dragging {
+  transition: none;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 130%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.swipe-toast-grab {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 10px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.swipe-toast-bar {
+  width: 44px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--track);
+}
+
+.swipe-toast-title {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.swipe-toast-text {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.swipe-toast-note {
+  margin: 8px 0 0;
+  color: var(--text-3);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.swipe-toast-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}

@@ -1,0 +1,33 @@
+.page-stage {
+  position: relative;
+  z-index: 1;
+  animation: page-enter 440ms var(--ease-out);
+}
+
+.page-stage.is-exiting {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  pointer-events: none;
+  animation: page-exit 440ms var(--ease-out) forwards;
+}
+
+@keyframes page-enter {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes page-exit {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-stage,
+  .page-stage.is-exiting {
+    animation: none;
+  }
+}

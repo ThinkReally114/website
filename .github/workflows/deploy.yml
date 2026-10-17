@@ -29,6 +29,9 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+        env:
+          VITE_LLM_ENDPOINT: ${{ vars.VITE_LLM_ENDPOINT }}
+          VITE_LLM_MODEL: ${{ vars.VITE_LLM_MODEL }}
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

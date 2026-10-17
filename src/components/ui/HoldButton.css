@@ -1,0 +1,66 @@
+.hold-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  padding: 0 18px;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  user-select: none;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color var(--duration) var(--ease-soft), color var(--duration) var(--ease-soft),
+    background var(--duration) var(--ease-soft);
+}
+
+.hold-btn:hover {
+  background: var(--surface-hover);
+}
+
+.hold-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(115deg, color-mix(in srgb, var(--accent-a) 78%, transparent), color-mix(in srgb, var(--accent-b) 72%, transparent));
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 300ms var(--ease-soft);
+  pointer-events: none;
+}
+
+.hold-btn.is-holding .hold-fill {
+  transition: none;
+}
+
+.hold-label {
+  position: relative;
+  z-index: 1;
+}
+
+.hold-btn.is-holding {
+  border-color: color-mix(in srgb, var(--accent-a) 60%, transparent);
+}
+
+.hold-btn.is-holding .hold-label,
+.hold-btn.is-done .hold-label {
+  color: var(--accent-contrast);
+}
+
+.hold-btn.is-done {
+  border-color: transparent;
+  background: var(--gradient-accent);
+}
+
+.hold-btn.is-danger .hold-fill {
+  background: linear-gradient(115deg, color-mix(in srgb, var(--accent-b) 80%, transparent), color-mix(in srgb, var(--accent-b) 60%, var(--accent-a)));
+}
+
+.hold-btn.is-danger.is-done {
+  background: linear-gradient(115deg, var(--accent-b), color-mix(in srgb, var(--accent-b) 70%, var(--accent-a)));
+}

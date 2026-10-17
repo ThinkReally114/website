@@ -1,0 +1,8 @@
+.giscus-container {
+  min-height: 220px;
+}
+
+.giscus-container iframe {
+  width: 100%;
+  border: none;
+}

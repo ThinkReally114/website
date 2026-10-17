@@ -3,10 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="description" content="ThinkReally114" />
     <title>ThinkReally114</title>
+    <script>
+      (function () {
+        var dark = true;
+        try {
+          var setting = localStorage.getItem('winui-theme-setting');
+          dark =
+            setting === 'dark' ||
+            (setting !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        } catch (error) {
+          dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+        document.documentElement.classList.add(dark ? 'theme-dark' : 'theme-light');
+        document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+      })();
+    </script>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

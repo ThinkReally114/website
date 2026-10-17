@@ -1,0 +1,95 @@
+.topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+}
+
+.topbar::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 -20px;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bg) 82%, transparent), transparent);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 42%, transparent);
+  mask-image: linear-gradient(to bottom, #000 42%, transparent);
+  pointer-events: none;
+}
+
+.topbar-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 60px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 22px;
+}
+
+.topbar-burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  transition: background var(--duration-fast) var(--ease-soft);
+}
+
+.topbar-burger:hover {
+  background: var(--surface-hover);
+}
+
+.topbar-brand {
+  flex: none;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.topbar-actions {
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar-dock {
+  display: none;
+  z-index: 30;
+}
+
+@media (min-width: 761px) and (hover: hover) and (pointer: fine) {
+  .dock.topbar-dock {
+    display: flex;
+  }
+}
+
+@media (max-width: 760px), (pointer: coarse) {
+  .topbar-inner {
+    gap: 10px;
+    padding: 0 14px;
+  }
+
+  .topbar-burger {
+    display: inline-flex;
+  }
+
+  .topbar-brand {
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 400px) {
+  .topbar-brand {
+    font-size: 14px;
+  }
+}

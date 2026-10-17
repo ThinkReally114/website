@@ -1,0 +1,38 @@
+.reveal > * {
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity 540ms var(--ease-out), transform 540ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.is-in > * {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal > .glass-card,
+.reveal > *:has(.glass-card) {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+.reveal > .glass-card,
+.reveal > *:has(.glass-card) .glass-card {
+  transform: translateX(24px);
+  transition: transform 540ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.is-in > .glass-card,
+.reveal.is-in > *:has(.glass-card) .glass-card {
+  transform: none;
+}
+
+html[data-nav-enter='1'] .reveal > *,
+html[data-nav-enter='1'] .reveal > *:has(.glass-card) .glass-card {
+  opacity: 1;
+  transform: none;
+  transition: none;
+  transition-delay: 0ms;
+}

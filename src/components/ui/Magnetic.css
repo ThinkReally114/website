@@ -1,0 +1,67 @@
+.mbtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--duration-fast) var(--ease-soft), border-color var(--duration-fast) var(--ease-soft),
+    box-shadow var(--duration) var(--ease-soft), color var(--duration-fast) var(--ease-soft), filter var(--duration-fast) var(--ease-soft);
+}
+
+.mbtn-md {
+  height: 42px;
+  padding: 0 22px;
+  font-size: 14px;
+}
+
+.mbtn-sm {
+  height: 34px;
+  padding: 0 16px;
+  font-size: 13px;
+}
+
+.mbtn-primary {
+  background: var(--gradient-accent);
+  color: var(--accent-contrast);
+  box-shadow: 0 10px 30px -12px var(--glow-a), 0 4px 14px -6px var(--glow-b);
+}
+
+.mbtn-primary:hover {
+  filter: brightness(1.07);
+  box-shadow: 0 14px 38px -12px var(--glow-a), 0 6px 20px -8px var(--glow-b);
+}
+
+.mbtn-ghost {
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--text);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.mbtn-ghost:hover {
+  background: var(--surface-hover);
+}
+
+.mbtn-quiet {
+  background: transparent;
+  color: var(--text-2);
+}
+
+.mbtn-quiet:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.mbtn:active {
+  filter: brightness(0.96);
+}
