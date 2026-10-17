@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import TopBar from './components/layout/TopBar';
 import WaveBackground from './components/layout/WaveBackground';
 import CookieConsent from './components/layout/CookieConsent';
-import CursorDot from './components/ui/CursorDot';
 import HomePage from './pages/HomePage';
 import BlogPage from './pages/BlogPage';
 import PostPage from './pages/PostPage';
@@ -67,7 +66,6 @@ export default function App() {
   return (
     <div className="app-root">
       <WaveBackground />
-      <CursorDot />
       <button type="button" className="skip-link" onClick={skipToContent}>
         {t('nav.home')}
       </button>
