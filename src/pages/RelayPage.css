@@ -31,13 +31,6 @@
   letter-spacing: -0.01em;
 }
 
-.relay-section-hint {
-  max-width: 520px;
-  color: var(--text-3);
-  font-size: 13px;
-  line-height: 1.55;
-}
-
 .relay-base {
   display: flex;
   gap: 14px;
@@ -149,23 +142,6 @@
   font-size: 15px;
   font-weight: 600;
   letter-spacing: -0.01em;
-}
-
-.relay-tag {
-  padding: 2px 9px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-full);
-  color: var(--text-3);
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.relay-footnote {
-  margin-top: 28px;
-  color: var(--text-3);
-  font-size: 12.5px;
 }
 
 @media (max-width: 760px) {

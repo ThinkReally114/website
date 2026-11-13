@@ -36,7 +36,19 @@ const DELAY_MAX = 20000;
 
 const RELAY_MODELS = [
   { id: 'gpt-6-astra', object: 'model', created: 1709072000, owned_by: 'openai' },
-  { id: 'claude-opus-5.5', object: 'model', created: 1705443200, owned_by: 'anthropic' }
+  { id: 'claude-opus-5.5', object: 'model', created: 1705443200, owned_by: 'anthropic' },
+  { id: 'glm-5.3', object: 'model', created: 1709072000, owned_by: 'zhipu' },
+  { id: 'glm-5.3-flash', object: 'model', created: 1709072000, owned_by: 'zhipu' },
+  { id: 'codex-auto-review', object: 'model', created: 1709072000, owned_by: 'openai' },
+  { id: 'deepseek-v4.1-flash', object: 'model', created: 1709072000, owned_by: 'deepseek' },
+  { id: 'gpt-5.6-luna', object: 'model', created: 1709072000, owned_by: 'openai' },
+  { id: 'gpt-5.6-sol', object: 'model', created: 1709072000, owned_by: 'openai' },
+  { id: 'gpt-6-luna', object: 'model', created: 1709072000, owned_by: 'openai' },
+  { id: 'gpt-6.1-sol', object: 'model', created: 1709072000, owned_by: 'openai' },
+  { id: 'claude-fable-5.2', object: 'model', created: 1705443200, owned_by: 'anthropic' },
+  { id: 'claude-mythos-5.2', object: 'model', created: 1705443200, owned_by: 'anthropic' },
+  { id: 'claude-sonnet-5.5', object: 'model', created: 1705443200, owned_by: 'anthropic' },
+  { id: 'claude-haiku-5.5', object: 'model', created: 1705443200, owned_by: 'anthropic' }
 ];
 
 const ENDPOINTS = 'GET /v1/models, POST /v1/chat/completions';

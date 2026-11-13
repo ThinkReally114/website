@@ -148,9 +148,7 @@ const resources: Record<string, string> = {
   'relay.base.copy': '复制',
   'relay.base.copied': '已复制',
   'relay.endpoints.title': '接口',
-  'relay.models.title': '可用模型',
-  'relay.models.sub': '两个旗舰模型，任选其一，不用 Key，不用排队。',
-  'relay.footnote': '接口部署在 Cloudflare Worker，页面本身不发起任何请求。'
+  'relay.models.title': '可用模型'
 };
 
 export default resources;

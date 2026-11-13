@@ -148,9 +148,7 @@ const resources: Record<string, string> = {
   'relay.base.copy': 'Copy',
   'relay.base.copied': 'Copied',
   'relay.endpoints.title': 'Endpoints',
-  'relay.models.title': 'Models',
-  'relay.models.sub': 'Two flagship models. Pick either one — no key, no queue.',
-  'relay.footnote': 'The endpoints run on a Cloudflare Worker; this page makes no requests of its own.'
+  'relay.models.title': 'Models'
 };
 
 export default resources;

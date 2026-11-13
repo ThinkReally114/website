@@ -75,20 +75,16 @@ export default function RelayPage() {
           <h2 id="relay-models-title" className="relay-section-title">
             {t('relay.models.title')}
           </h2>
-          <p className="relay-section-hint">{t('relay.models.sub')}</p>
         </div>
 
         <ul className="relay-models">
           {RELAY_MODELS.map((item) => (
             <li key={item.id} className="relay-model glass-card">
               <code className="relay-model-id">{item.id}</code>
-              <span className="relay-tag">{item.owned_by}</span>
             </li>
           ))}
         </ul>
       </section>
-
-      <p className="relay-footnote">{t('relay.footnote')}</p>
     </div>
   );
 }
