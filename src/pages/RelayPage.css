@@ -1,13 +1,5 @@
 .relay-header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px 24px;
-  align-items: flex-end;
-  justify-content: space-between;
-}
-
-.relay-heading {
-  min-width: 0;
+  margin-bottom: 28px;
 }
 
 .relay-eyebrow {
@@ -20,29 +12,8 @@
   text-transform: uppercase;
 }
 
-.relay-status {
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  padding: 7px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-full);
-  background: var(--surface);
-  color: var(--text-2);
-  font-size: 12.5px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.relay-status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent-text);
-}
-
 .relay-section {
-  margin-top: 34px;
+  margin-top: 32px;
 }
 
 .relay-section-head {
@@ -67,6 +38,49 @@
   line-height: 1.55;
 }
 
+.relay-base {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+}
+
+.relay-base-url {
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.relay-copy {
+  display: inline-flex;
+  flex: none;
+  gap: 6px;
+  align-items: center;
+  height: 32px;
+  padding: 0 13px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-2);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-soft),
+    background-color var(--duration-fast) var(--ease-soft),
+    color var(--duration-fast) var(--ease-soft);
+}
+
+.relay-copy:hover {
+  border-color: var(--accent-text);
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
 .relay-endpoints {
   display: grid;
   gap: 8px;
@@ -76,9 +90,9 @@
 .relay-endpoint {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 12px;
+  gap: 12px;
   align-items: center;
-  padding: 12px 16px;
+  padding: 13px 16px;
 }
 
 .relay-method {
@@ -105,13 +119,6 @@
   font-weight: 600;
 }
 
-.relay-endpoint-desc {
-  flex: 1;
-  min-width: 180px;
-  color: var(--text-3);
-  font-size: 13px;
-}
-
 .relay-models {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -120,9 +127,12 @@
 }
 
 .relay-model {
-  display: grid;
-  gap: 16px;
-  padding: 18px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
   transition:
     border-color var(--duration) var(--ease-soft),
     transform var(--duration) var(--ease-out);
@@ -133,18 +143,10 @@
   transform: translateY(-2px);
 }
 
-.relay-model-top {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  justify-content: space-between;
-}
-
 .relay-model-id {
   color: var(--text);
   font-family: var(--font-mono);
-  font-size: 15.5px;
+  font-size: 15px;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
@@ -160,255 +162,6 @@
   text-transform: uppercase;
 }
 
-.relay-model-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  justify-content: space-between;
-  color: var(--text-3);
-  font-size: 12.5px;
-}
-
-.relay-console {
-  display: grid;
-  gap: 12px;
-  padding: 16px 18px 18px;
-}
-
-.relay-console-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.relay-console-model {
-  min-width: 168px;
-}
-
-.relay-console-phase {
-  color: var(--text-3);
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.04em;
-}
-
-.relay-console-phase[data-phase='streaming'] {
-  color: var(--accent-text);
-}
-
-.relay-console-input {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
-  background: var(--bg-soft);
-  color: var(--text);
-  font-size: 14px;
-  line-height: 1.6;
-  resize: vertical;
-  transition: border-color var(--duration-fast) var(--ease-soft);
-}
-
-.relay-console-input::placeholder {
-  color: var(--text-3);
-}
-
-.relay-console-input:focus-visible {
-  border-color: var(--accent-text);
-  outline: none;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 45%, transparent);
-}
-
-.relay-console-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.relay-send,
-.relay-ghost {
-  height: 34px;
-  padding: 0 18px;
-  border-radius: var(--radius-full);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    opacity var(--duration-fast) var(--ease-soft),
-    border-color var(--duration-fast) var(--ease-soft),
-    background-color var(--duration-fast) var(--ease-soft);
-}
-
-.relay-send {
-  border: 1px solid transparent;
-  background: var(--gradient-accent);
-  color: var(--accent-contrast);
-}
-
-.relay-send:hover:not(:disabled) {
-  background: var(--gradient-sheen);
-}
-
-.relay-ghost {
-  border: 1px solid var(--border-strong);
-  background: transparent;
-  color: var(--text-2);
-}
-
-.relay-ghost:hover:not(:disabled) {
-  background: var(--surface-strong);
-  color: var(--text);
-}
-
-.relay-send:disabled,
-.relay-ghost:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.relay-console-out {
-  max-height: 360px;
-  margin: 4px 0 0;
-  padding: 14px;
-  overflow: auto;
-  border: 1px solid var(--code-border, var(--border));
-  border-radius: var(--radius-sm);
-  background: var(--code-bg);
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 9.4px;
-  line-height: 1.02;
-  letter-spacing: 0;
-  white-space: pre;
-  overflow-wrap: normal;
-}
-
-.relay-console-out[data-empty] {
-  padding: 22px 14px;
-  color: var(--text-3);
-  font-family: var(--font-sans);
-  font-size: 12.5px;
-  line-height: 1.6;
-  white-space: normal;
-}
-
-.relay-caret {
-  display: inline-block;
-  width: 6px;
-  height: 10px;
-  background: var(--accent-text);
-  animation: relay-blink 1s steps(2, start) infinite;
-}
-
-@keyframes relay-blink {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
-}
-
-.relay-code {
-  margin-top: 10px;
-  overflow: hidden;
-  border: 1px solid var(--code-border, var(--border));
-  border-radius: var(--radius-md);
-  background: var(--code-bg);
-}
-
-.relay-code:first-of-type {
-  margin-top: 0;
-}
-
-.relay-code-bar {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 7px 10px 7px 16px;
-  border-bottom: 1px solid var(--border);
-}
-
-.relay-code-name {
-  color: var(--text-3);
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.relay-copy {
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-  height: 28px;
-  padding: 0 11px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-full);
-  background: transparent;
-  color: var(--text-2);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    border-color var(--duration-fast) var(--ease-soft),
-    background-color var(--duration-fast) var(--ease-soft),
-    color var(--duration-fast) var(--ease-soft);
-}
-
-.relay-copy:hover {
-  border-color: var(--accent-text);
-  background: var(--surface-strong);
-  color: var(--text);
-}
-
-.relay-code-body {
-  margin: 0;
-  padding: 14px 18px;
-  overflow-x: auto;
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 12.4px;
-  line-height: 1.7;
-  tab-size: 2;
-}
-
-.relay-code-body code {
-  font: inherit;
-  white-space: pre;
-}
-
-.relay-limits {
-  margin: 0;
-  border-top: 1px solid var(--border);
-}
-
-.relay-limit {
-  display: grid;
-  grid-template-columns: 148px minmax(0, 1fr);
-  gap: 16px;
-  padding: 14px 2px;
-  border-bottom: 1px solid var(--border);
-}
-
-.relay-limit dt {
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.relay-limit dd {
-  margin: 0;
-  color: var(--text-2);
-  font-size: 13.5px;
-  line-height: 1.6;
-}
-
 .relay-footnote {
   margin-top: 28px;
   color: var(--text-3);
@@ -418,18 +171,5 @@
 @media (max-width: 760px) {
   .relay-models {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .relay-limit {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 4px;
-  }
-
-  .relay-status {
-    align-self: flex-start;
-  }
-
-  .relay-console-out {
-    font-size: 7.6px;
   }
 }

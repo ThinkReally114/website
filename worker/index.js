@@ -1,20 +1,27 @@
-import { RELAY_ART } from './art.js';
+import { RELAY_ANSWER } from './art.js';
 
-const UPSTREAM = 'https://open.bigmodel.cn/api/paas/v4/chat/completions';
-const ALLOWED_MODELS = ['glm-4.6v-flash'];
-const MAX_TOKENS = 2048;
-const RELAY_CHUNK = 56;
+const TOKEN_RATE = 16;
+const CHARS_PER_TOKEN = 4;
+const RELAY_CHUNK = CHARS_PER_TOKEN;
+const TICK_MS = Math.max(1, Math.round(1000 / TOKEN_RATE) - 12);
+const RELAY_BUILD = '2026-11-13.auth-delay-16t';
+const RELAY_API_KEY = 'sk-thinkreally114-worker-111';
+const DELAY_MIN = 5000;
+const DELAY_MAX = 20000;
 
 const RELAY_MODELS = [
   { id: 'gpt-6-astra', object: 'model', created: 1709072000, owned_by: 'openai' },
   { id: 'claude-opus-5.5', object: 'model', created: 1705443200, owned_by: 'anthropic' }
 ];
 
+const ENDPOINTS = 'GET /v1/models, POST /v1/chat/completions';
+
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-api-key, anthropic-version, anthropic-beta',
-  'Access-Control-Max-Age': '86400'
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-api-key',
+  'Access-Control-Max-Age': '86400',
+  'X-Relay-Build': RELAY_BUILD
 };
 
 const reply = (payload, status) =>
@@ -22,6 +29,26 @@ const reply = (payload, status) =>
     status,
     headers: { ...CORS, 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }
   });
+
+const submittedKey = (request) => {
+  const raw = request.headers.get('Authorization') || request.headers.get('x-api-key') || '';
+  return raw.replace(/^Bearer\s+/i, '').trim();
+};
+
+const authFailure = (request) =>
+  reply(
+    {
+      error: {
+        message: `Incorrect API key provided: ${submittedKey(request) || '(none)'}. You can find your API key at https://platform.openai.com/account/api-keys.`,
+        type: 'invalid_request_error',
+        code: 'invalid_api_key'
+      }
+    },
+    401
+  );
+
+const pause = () =>
+  new Promise((resolve) => setTimeout(resolve, DELAY_MIN + Math.random() * (DELAY_MAX - DELAY_MIN)));
 
 const sseResponse = (frames) => {
   const encoder = new TextEncoder();
@@ -35,7 +62,7 @@ const sseResponse = (frames) => {
         }
         controller.enqueue(encoder.encode(frames[index]));
         index += 1;
-        await new Promise((resolve) => setTimeout(resolve, 6));
+        await new Promise((resolve) => setTimeout(resolve, TICK_MS));
       }
     }),
     {
@@ -50,19 +77,43 @@ const sseResponse = (frames) => {
   );
 };
 
-const pieces = () => {
+const pieces = (text) => {
   const chunks = [];
-  for (let index = 0; index < RELAY_ART.length; index += RELAY_CHUNK) {
-    chunks.push(RELAY_ART.slice(index, index + RELAY_CHUNK));
+  for (let index = 0; index < text.length; index += RELAY_CHUNK) {
+    chunks.push(text.slice(index, index + RELAY_CHUNK));
   }
   return chunks;
 };
 
+const lastUserText = (body) => {
+  const messages = Array.isArray(body.messages) ? body.messages : [];
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    const message = messages[index];
+    if (!message || message.role !== 'user') continue;
+    if (typeof message.content === 'string') return message.content;
+    if (Array.isArray(message.content)) {
+      return message.content
+        .map((part) => (typeof part === 'string' ? part : typeof part?.text === 'string' ? part.text : ''))
+        .join(' ');
+    }
+  }
+  return '';
+};
+
+const answerFor = (body, model) => {
+  const text = lastUserText(body);
+  if (/\bhello\b/i.test(text) || text.includes('你好')) {
+    return `Hello, I'm ${model}. What shall we do today? I can handle all kinds of coding work.`;
+  }
+  return RELAY_ANSWER;
+};
+
 const openaiChat = (model, body) => {
   const created = Math.floor(Date.now() / 1000);
+  const answer = answerFor(body, model);
 
   if (body.stream === true) {
-    const frames = pieces().map(
+    const frames = pieces(answer).map(
       (text) =>
         `data: ${JSON.stringify({
           id: `chatcmpl-${created}`,
@@ -82,65 +133,8 @@ const openaiChat = (model, body) => {
       object: 'chat.completion',
       created,
       model,
-      choices: [{ index: 0, message: { role: 'assistant', content: RELAY_ART }, finish_reason: 'stop' }],
+      choices: [{ index: 0, message: { role: 'assistant', content: answer }, finish_reason: 'stop' }],
       usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 }
-    },
-    200
-  );
-};
-
-const anthropicMessage = (model, body) => {
-  const messageId = `msg_${Date.now().toString(36)}`;
-
-  if (body.stream === true) {
-    const event = (name, payload) => `event: ${name}\ndata: ${JSON.stringify(payload)}\n\n`;
-    const frames = [
-      event('message_start', {
-        type: 'message_start',
-        message: {
-          id: messageId,
-          type: 'message',
-          role: 'assistant',
-          model,
-          content: [],
-          stop_reason: null,
-          stop_sequence: null,
-          usage: { input_tokens: 0, output_tokens: 0 }
-        }
-      }),
-      event('content_block_start', {
-        type: 'content_block_start',
-        index: 0,
-        content_block: { type: 'text', text: '' }
-      }),
-      ...pieces().map((text) =>
-        event('content_block_delta', {
-          type: 'content_block_delta',
-          index: 0,
-          delta: { type: 'text_delta', text }
-        })
-      ),
-      event('content_block_stop', { type: 'content_block_stop', index: 0 }),
-      event('message_delta', {
-        type: 'message_delta',
-        delta: { stop_reason: 'end_turn', stop_sequence: null },
-        usage: { output_tokens: 0 }
-      }),
-      event('message_stop', { type: 'message_stop' })
-    ];
-    return sseResponse(frames);
-  }
-
-  return reply(
-    {
-      id: messageId,
-      type: 'message',
-      role: 'assistant',
-      model,
-      content: [{ type: 'text', text: RELAY_ART }],
-      stop_reason: 'end_turn',
-      stop_sequence: null,
-      usage: { input_tokens: 0, output_tokens: 0 }
     },
     200
   );
@@ -154,95 +148,34 @@ const readJson = async (request) => {
   }
 };
 
-async function legacyProxy(request, env) {
-  const header = request.headers.get('Authorization') || '';
-  const key = env.ZHIPU_API_KEY || header.replace(/^Bearer\s+/i, '').trim();
-  if (!key) {
-    return reply({ error: { message: 'missing api key' } }, 401);
-  }
-
-  const body = await readJson(request);
-  if (!body) {
-    return reply({ error: { message: 'invalid json body' } }, 400);
-  }
-
-  if (!ALLOWED_MODELS.includes(body.model)) {
-    return reply({ error: { message: `model not allowed by this proxy: ${body.model ?? '(missing)'}` } }, 400);
-  }
-
-  const temperature = typeof body.temperature === 'number' ? Math.min(1.5, Math.max(0, body.temperature)) : 0.7;
-
-  const upstream = await fetch(UPSTREAM, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${key}`
-    },
-    body: JSON.stringify({
-      model: body.model,
-      messages: Array.isArray(body.messages) ? body.messages : [],
-      temperature,
-      max_tokens: MAX_TOKENS,
-      stream: true
-    })
-  });
-
-  if (!upstream.ok || !upstream.body) {
-    const detail = await upstream.text();
-    return new Response(detail || JSON.stringify({ error: { message: 'upstream failed' } }), {
-      status: upstream.status,
-      headers: { ...CORS, 'Content-Type': 'application/json; charset=utf-8' }
-    });
-  }
-
-  return new Response(upstream.body, {
-    status: 200,
-    headers: {
-      ...CORS,
-      'Content-Type': upstream.headers.get('Content-Type') || 'text/event-stream; charset=utf-8',
-      'Cache-Control': 'no-store'
-    }
-  });
-}
-
 export default {
-  async fetch(request, env) {
+  async fetch(request) {
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: CORS });
     }
 
-    const path = new URL(request.url).pathname.replace(/\/+$/, '');
+    const path = new URL(request.url).pathname.replace(/\/+$/, '') || '/';
 
     if (path === '/v1/models') {
       if (request.method !== 'GET') return reply({ error: { message: 'method not allowed' } }, 405);
       return reply({ object: 'list', data: RELAY_MODELS }, 200);
     }
 
-    if (path === '/v1/messages/count_tokens' && request.method === 'POST') {
-      return reply({ input_tokens: 0 }, 200);
-    }
-
-    if ((path === '/v1/chat/completions' || path === '/v1/messages') && request.method === 'POST') {
+    if (path === '/v1/chat/completions' && request.method === 'POST') {
+      if (submittedKey(request) !== RELAY_API_KEY) return authFailure(request);
       const body = await readJson(request);
       if (!body) return reply({ error: { message: 'invalid json body' } }, 400);
       const model = typeof body.model === 'string' ? body.model : '';
-      if (path === '/v1/messages') {
-        return anthropicMessage(model || 'claude-opus-5.5', body);
-      }
       if (!RELAY_MODELS.some((item) => item.id === model)) {
         return reply({ error: { message: `model not available on this relay: ${model || '(missing)'}` } }, 400);
       }
+      await pause();
       return openaiChat(model, body);
     }
 
-    if (path.startsWith('/v1/')) {
-      return reply({ error: { message: `unknown endpoint: ${request.method} ${path}` } }, 404);
-    }
-
-    if (request.method !== 'POST') {
-      return reply({ error: { message: 'method not allowed' } }, 405);
-    }
-
-    return legacyProxy(request, env);
+    return reply(
+      { error: { message: `unknown endpoint: ${request.method} ${path}`, endpoint: ENDPOINTS } },
+      404
+    );
   }
 };

@@ -6,3 +6,4 @@ dist
 npm-debug.log*
 thumbcache.db
 tsconfig.tsbuildinfo
+.workbuddy
