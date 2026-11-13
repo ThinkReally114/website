@@ -8,10 +8,10 @@ import SquishSwitch from '../ui/SquishSwitch';
 import WarmTooltip from '../ui/WarmTooltip';
 import Dock, { type DockItemData } from '../ui/Dock';
 import MobileDrawer from './MobileDrawer';
-import { BlogIcon, ChatIcon, HomeIcon, LinkIcon, MenuIcon, SlidersIcon } from '../icons';
+import { BlogIcon, ChatIcon, HomeIcon, LinkIcon, MenuIcon, ServerIcon, SlidersIcon } from '../icons';
 import './TopBar.css';
 
-const DOCK_GLYPHS = [HomeIcon, BlogIcon, ChatIcon, LinkIcon, SlidersIcon];
+const DOCK_GLYPHS = [HomeIcon, BlogIcon, ChatIcon, ServerIcon, LinkIcon, SlidersIcon];
 
 export default function TopBar() {
   const { t, i18n } = useTranslation();
@@ -30,6 +30,7 @@ export default function TopBar() {
       active: location.pathname.startsWith('/blog') || location.pathname.startsWith('/post')
     },
     { to: '/playground', label: t('nav.playground'), active: location.pathname.startsWith('/playground') },
+    { to: '/relay', label: t('nav.relay'), active: location.pathname.startsWith('/relay') },
     { to: '/friends', label: t('nav.friends'), active: location.pathname.startsWith('/friends') },
     { to: '/settings', label: t('nav.settings'), active: location.pathname.startsWith('/settings') }
   ];

@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import BlogPage from './pages/BlogPage';
 import PostPage from './pages/PostPage';
 import PlaygroundPage from './pages/PlaygroundPage';
+import RelayPage from './pages/RelayPage';
 import FriendsPage from './pages/FriendsPage';
 import SettingsPage from './pages/SettingsPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -86,6 +87,7 @@ export default function App() {
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/post/:slug" element={<PostPage />} />
                 <Route path="/playground" element={<PlaygroundPage />} />
+                <Route path="/relay" element={<RelayPage />} />
                 <Route path="/friends" element={<FriendsPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="*" element={<NotFoundPage />} />
