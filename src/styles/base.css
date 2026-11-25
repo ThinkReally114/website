@@ -52,6 +52,12 @@ a {
   text-decoration: none;
 }
 
+a,
+button,
+[role='button'] {
+  -webkit-tap-highlight-color: transparent;
+}
+
 button,
 input,
 select,
